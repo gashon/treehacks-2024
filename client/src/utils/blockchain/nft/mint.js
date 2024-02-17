@@ -7,7 +7,9 @@ async function mintNFT(recipientEmail, audio_name, ipfshash) {
   const env = 'www';
   const recipientAddress = `email:${recipientEmail}:${chain}`;
 
-  const image = pinataGatewayurl + '/ipfs/' + ipfshash;
+  const audio_url = pinataGatewayurl + '/ipfs/' + ipfshash;
+  const image =
+    pinataGatewayurl + '/ipfs/QmT5yGY7AMedHbENeUrnbcFA6Wr9pgnUAtTZ6qoqtu4UQV';
 
   const url = `https://${env}.crossmint.com/api/2022-06-09/collections/default/nfts`;
   const options = {
@@ -22,7 +24,7 @@ async function mintNFT(recipientEmail, audio_name, ipfshash) {
       metadata: {
         name: audio_name,
         image,
-        animation_url,
+        animation_url: audio_url,
         description: 'My first NFT using Crossmint',
       },
     }),
