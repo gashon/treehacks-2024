@@ -35,6 +35,10 @@ var contract = `
         string memory oldCreatedAt = createdAt;
         createdAt = newCreatedAt;
     }
+
+    function get() public view returns (string memory, string memory, string memory) {
+      return (userId, songId, createdAt);
+    }
   }`;
 
 var input = {
@@ -48,14 +52,6 @@ var contractName = 'AudioContract';
 var bytecode = output.contracts['audio.sol'][contractName].evm.bytecode.object;
 var abi = output.contracts['audio.sol'][contractName].abi;
 
-// Connect to the blockchain with your RPC provider
-// const providerRPC = {
-//   caldera: {
-//     name: 'Caldera',
-//     rpc: calderaRPCUrl,
-//     chainId: calderaChainId,
-//   },
-// };
 const provider = new ethers.providers.JsonRpcProvider(calderaRPCUrl);
 
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -82,18 +78,4 @@ async function deployContract(userid, songid, createdAt) {
 }
 
 // TODO REMOVE
-deployContract('userid', 'songid', 'createdAt');
-
-// async function setAndGet(contractAddress) {
-//   const contract = new ethers.Contract(contractAddress, contractABI, wallet);
-
-//   // Set a value
-//   const tx = await contract.set(42);
-//   await tx.wait(); // Wait for the transaction to be mined
-
-//   // Get the stored value
-//   const value = await contract.get();
-//   console.log(`Stored value is: ${value}`);
-// }
-
-//setAndGet('0xb114516fB0E3aA01a44df82485f3729A119Ce9A9');
+deployContract('FAKE USER', 'FAKE SONG', 'CREATED NOW');
