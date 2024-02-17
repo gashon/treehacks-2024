@@ -17,3 +17,16 @@ export type EmailTemplate = {
   content: string;
   args?: Record<string, string | undefined>;
 };
+
+export type S3PresignedGetRequest = {
+  file_name: string;
+  file_type: string;
+};
+
+type Response<T> = {
+  data: T;
+};
+
+export type PresignedUrl = Response<{
+  presigned_url: string;
+}>;
