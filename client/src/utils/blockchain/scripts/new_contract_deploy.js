@@ -11,13 +11,10 @@ var contract = `
 
   contract AudioContract {
     string public userId;
-    string public songId;
     string public createdAt;
 
-    constructor(string memory initUserId, string memory initSongId, string memory initCreatedAt) {
-
+    constructor(string memory initUserId, string memory initCreatedAt) {
         userId = initUserId;
-        songId = initSongId;
         createdAt = initCreatedAt;
     }
 
@@ -26,18 +23,13 @@ var contract = `
         userId = newUserId;
     }
 
-    function updateSongId(string memory newSongId) public {
-        string memory oldSongId = songId;
-        songId = newSongId;
-    }
-
     function updateCreatedAt(string memory newCreatedAt) public {
         string memory oldCreatedAt = createdAt;
         createdAt = newCreatedAt;
     }
 
-    function get() public view returns (string memory, string memory, string memory) {
-      return (userId, songId, createdAt);
+    function get() public view returns (string memory, string memory) {
+      return (userId, createdAt);
     }
   }`;
 
@@ -59,15 +51,15 @@ const wallet = new ethers.Wallet(privateKey, provider);
 var contractABI = abi;
 var contractBytecode = bytecode;
 
-// Pass in the userid, songid, and createdAt
+// Pass in the userid, and createdAt
 // Returns the contract address that was deployed on our chain
-async function deployContract(userid, songid, createdAt) {
+async function deployContract(userid, createdAt) {
   const factory = new ethers.ContractFactory(
     contractABI,
     contractBytecode,
     wallet
   );
-  const contract = await factory.deploy(userid, songid, createdAt);
+  const contract = await factory.deploy(userid, createdAt);
 
   await contract.deployed();
 
@@ -78,4 +70,4 @@ async function deployContract(userid, songid, createdAt) {
 }
 
 // TODO REMOVE
-deployContract('FAKE USER', 'FAKE SONG', 'CREATED NOW');
+deployContract('FAKE USER', 'CREATED NOW');

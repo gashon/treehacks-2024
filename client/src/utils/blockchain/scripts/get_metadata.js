@@ -6,6 +6,13 @@ const {
 } = require('../secrets.json');
 var solc = require('solc');
 
+// for speedup, don't compile if already compiled
+// const fs = require('fs');
+// const path = require('path');
+// const contractPath = path.resolve(__dirname, 'audio.sol');
+// const contractSource = fs.readFileSync
+// (contractPath, 'utf8');
+
 const provider = new ethers.providers.JsonRpcProvider(calderaRPCUrl);
 
 var contract = `
@@ -13,13 +20,10 @@ var contract = `
 
   contract AudioContract {
     string public userId;
-    string public songId;
     string public createdAt;
 
-    constructor(string memory initUserId, string memory initSongId, string memory initCreatedAt) {
-
+    constructor(string memory initUserId, string memory initCreatedAt) {
         userId = initUserId;
-        songId = initSongId;
         createdAt = initCreatedAt;
     }
 
@@ -28,18 +32,13 @@ var contract = `
         userId = newUserId;
     }
 
-    function updateSongId(string memory newSongId) public {
-        string memory oldSongId = songId;
-        songId = newSongId;
-    }
-
     function updateCreatedAt(string memory newCreatedAt) public {
         string memory oldCreatedAt = createdAt;
         createdAt = newCreatedAt;
     }
 
-    function get() public view returns (string memory, string memory, string memory) {
-      return (userId, songId, createdAt);
+    function get() public view returns (string memory, string memory) {
+      return (userId, createdAt);
     }
   }`;
 
