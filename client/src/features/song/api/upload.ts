@@ -13,7 +13,6 @@ const upload = async ({
     headers: {
       "Content-Type": file.type,
     },
-    credentials: "same-origin",
     body: file,
   });
   const data = await res.json();

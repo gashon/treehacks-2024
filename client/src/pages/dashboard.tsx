@@ -14,6 +14,7 @@ const Dropzone: FC = () => {
           fileType: file.type,
         });
 
+        console.log("trying", presignedResponse);
         if (presignedResponse.url) {
           // Upload file to the presigned URL
           uploadFileMutation.mutate({
@@ -28,9 +29,9 @@ const Dropzone: FC = () => {
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: {
-      "audio/*": [".mp3", ".wav", ".aac"],
-    },
+    // accept: {
+    //   "audio/*": [".mp3", ".wav", ".aac"],
+    // },
   });
 
   const files = acceptedFiles.map((file: File) => (
