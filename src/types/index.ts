@@ -10,3 +10,10 @@ export type LoginPostRequest = {
 export type RegisterPostRequest = {
   token: string;
 };
+
+export type EmailTemplate = {
+  from: string;
+  subject: string;
+  content: string;
+  args?: Record<string, string | undefined>;
+};
