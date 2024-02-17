@@ -1,11 +1,24 @@
 const { ethers } = require('ethers');
+const { privateKey, calderaRPCUrl, calderaChainId } = require('./secrets.json');
 
 // Connect to the blockchain with your RPC provider
-const provider = new ethers.providers.JsonRpcProvider('your-rpc-url');
+const providerRPC = {
+  caldera: {
+    name: 'Caldera',
+    rpc: calderaRPCUrl, // Insert your RPC URL here
+    chainId: calderaChainId, //Insert your ChainID Here
+  },
+};
+const provider = new ethers.providers.StaticJsonRpcProvider(
+  providerRPC.constellation.rpc,
+  {
+    chainId: providerRPC.constellation.chainId,
+    name: providerRPC.constellation.name,
+  }
+);
 
 // Wallet/Private key of the deployer
-const deployerPrivateKey = 'your-private-key';
-const wallet = new ethers.Wallet(deployerPrivateKey, provider);
+const wallet = new ethers.Wallet(privateKey, provider);
 
 // Compiled contract ABI and Bytecode
 const contractABI = 'your-contract-abi';
