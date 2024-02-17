@@ -1,13 +1,12 @@
-import { S3PresignedGetRequest } from "@/types";
+import { S3PresignedGetRequest, GetPresignedUrlResponse } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
-const getPresigned = async ({
-  fileName,
-  fileType,
-}: {
+type Presigned = {
   fileName: S3PresignedGetRequest["file_name"];
   fileType: S3PresignedGetRequest["file_type"];
-}) => {
+};
+
+export const getPresigned = async ({ fileName, fileType }: Presigned) => {
   const res = await fetch(
     `/api/api/s3/presigned?file_name=${fileName}&file_type=${fileType}`,
     {
@@ -19,11 +18,12 @@ const getPresigned = async ({
     },
   );
   const data = await res.json();
-  return data;
+  return data as GetPresignedUrlResponse;
 };
 
-export const useGetPresignedUrl = () => {
+export const useGetPresignedUrl = ({ fileName, fileType }: Presigned) => {
   return useQuery({
-    queryFn: getPresigned,
+    queryKey: ["presigned"],
+    queryFn: () => getPresigned({ fileName, fileType }),
   });
 };

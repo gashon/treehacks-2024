@@ -27,6 +27,6 @@ type Response<T> = {
   data: T;
 };
 
-export type PresignedUrl = Response<{
-  presigned_url: string;
+export type GetPresignedUrlResponse = Response<{
+  url: string;
 }>;

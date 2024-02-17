@@ -34,7 +34,7 @@ export default async function handler(
 
   res.json({
     data: {
-      presigned_url: putUrl,
+      url: putUrl,
     },
   });
 }
