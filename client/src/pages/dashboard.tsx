@@ -1,6 +1,11 @@
 import { useCallback, FC } from "react";
 import { useDropzone } from "react-dropzone";
-import { useUploadFile, getPresignedUrl, uploadToChain } from "@/features/song";
+import {
+  useUploadFile,
+  getPresignedUrl,
+  useGetSongs,
+  uploadToChain,
+} from "@/features/song";
 
 const Dropzone: FC = () => {
   const uploadFileMutation = useUploadFile();
@@ -22,7 +27,10 @@ const Dropzone: FC = () => {
             file: file,
           });
 
-          await uploadToChain({ s3Key: presignedResponse.key });
+          await uploadToChain({
+            fileName: file.name,
+            s3Key: presignedResponse.key,
+          });
           console.log("uploaded");
         }
       });
@@ -57,12 +65,25 @@ const Dropzone: FC = () => {
   );
 };
 
+const SongsList: FC = () => {
+  const {
+    data: { data },
+    isLoading,
+  } = useGetSongs();
+
+  if (isLoading) return <p>Loading</p>;
+
+  console.log("data", data);
+  return <></>;
+};
+
 export default function Home() {
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24`}
     >
       <Dropzone />
+      <SongsList />
     </main>
   );
 }

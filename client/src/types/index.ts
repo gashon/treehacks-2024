@@ -46,9 +46,9 @@ export type GetPresignedUrlResponse = Response<{
 }>;
 
 export type PutChainResponse = Response<{
-  song_id: string;
+  song: Song;
 }>;
 
 export type SongsGetResponse = Response<{
-  songs: Pick<Song, "s3Key" | "chainAddress" | "id" | "fileName">;
+  songs: Pick<Song, "s3Key" | "chainAddress" | "id" | "fileName">[];
 }>;

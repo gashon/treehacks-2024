@@ -41,12 +41,12 @@ export default async function handler(
       chainAddress,
       fileName: file_name,
     })
-    .returning("id")
+    .returning("*")
     .execute();
 
   res.json({
     data: {
-      song_id: song,
+      song,
     },
   });
 }
