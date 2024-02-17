@@ -1,25 +1,31 @@
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
-const JWT =
-  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-    .eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI3MDE0N2I0My00ZDdlLTQ2NjAtOTc4ZS02NTEzMGNhMmJkYmUiLCJlbWFpbCI6ImphZGhhdmFtZXlha0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiOTgwY2Y1MWM1MzNlYjA1ZjM2MzYiLCJzY29wZWRLZXlTZWNyZXQiOiI5NTdkMTFkOWM3Y2M2ZWJjNDVmNTAwNDhhMjYzNDhiNGViMDVkN2E0YTM3NjUxNTBjNDg1MTc4NDRiMjVjYmU2IiwiaWF0IjoxNzA4MjAwODE0fQ
-    ._7PkPoR7EWhVdX5hpoNKQiAmBKcnx6c2ba3m_oJ7hMM;
-const {
-  privateKey,
-  calderaRPCUrl,
-  calderaChainId,
-} = require('../secrets.json');
+const stream = require('stream');
+const { promisify } = require('util');
 
-const pinFileToIPFS = async (mediaUrl) => {
+const { pinataGatewayurl, pinataAPIKey } = require('../secrets.json');
+
+const JWT = pinataAPIKey;
+
+const pinFileToIPFS = async (fileUrl, audioName) => {
+  const pipeStreamToPromise = (sourceStream, destStream) => {
+    const finished = promisify(stream.finished);
+    sourceStream.pipe(destStream);
+    return finished(destStream);
+  };
+
+  const response = await axios({
+    method: 'get',
+    url: fileUrl,
+    responseType: 'stream',
+  });
+
   const formData = new FormData();
-  const src = 'path/to/file.png';
-
-  const file = fs.createReadStream(src);
-  formData.append('file', file);
+  formData.append('file', response.data);
 
   const pinataMetadata = JSON.stringify({
-    name: 'File name',
+    name: audioName,
   });
   formData.append('pinataMetadata', pinataMetadata);
 
@@ -40,9 +46,15 @@ const pinFileToIPFS = async (mediaUrl) => {
         },
       }
     );
+
+    console.log(res.data.IpfsHash);
+
     console.log(res.data);
   } catch (error) {
     console.log(error);
   }
 };
-pinFileToIPFS();
+pinFileToIPFS(
+  'https://treehacks-2024.s3.us-west-1.amazonaws.com/Part+1.m4a',
+  'Part 1.m4a'
+);

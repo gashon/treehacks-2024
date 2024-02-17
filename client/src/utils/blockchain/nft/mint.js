@@ -1,11 +1,13 @@
 var fetch = require('node-fetch');
-const { crossmintAPIKey } = require('../secrets.json');
+const { crossmintAPIKey, pinataGatewayurl } = require('../secrets.json');
 
-async function mintNFT(recipientEmail, animation_url) {
+async function mintNFT(recipientEmail, audio_name, ipfshash) {
   const apiKey = crossmintAPIKey;
   const chain = 'polygon';
   const env = 'www';
   const recipientAddress = `email:${recipientEmail}:${chain}`;
+
+  const image = pinataGatewayurl + '/ipfs/' + ipfshash;
 
   const url = `https://${env}.crossmint.com/api/2022-06-09/collections/default/nfts`;
   const options = {
@@ -18,8 +20,8 @@ async function mintNFT(recipientEmail, animation_url) {
     body: JSON.stringify({
       recipient: recipientAddress,
       metadata: {
-        name: 'Crossmint Test NFT',
-        image: 'https://picsum.photos/400',
+        name: audio_name,
+        image,
         animation_url,
         description: 'My first NFT using Crossmint',
       },
@@ -34,5 +36,6 @@ async function mintNFT(recipientEmail, animation_url) {
 
 mintNFT(
   'jadhavameyak@gmail.com',
-  'https://treehacks-2024.s3.us-west-1.amazonaws.com/Part+1.m4a'
+  'Part 1.m4a',
+  'QmTGBQwFc1SdYvKD53eMqdMVGsRtTqS1kmRCvQDQY7n8Mv'
 );
