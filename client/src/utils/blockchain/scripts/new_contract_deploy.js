@@ -63,32 +63,37 @@ const wallet = new ethers.Wallet(privateKey, provider);
 var contractABI = abi;
 var contractBytecode = bytecode;
 
+// Pass in the userid, songid, and createdAt
+// Returns the contract address that was deployed on our chain
 async function deployContract(userid, songid, createdAt) {
-  // Create a Contract Factory
   const factory = new ethers.ContractFactory(
     contractABI,
     contractBytecode,
     wallet
   );
-  const contract = await factory.deploy(userid, songid, createdAt); // Deploy the contract
+  const contract = await factory.deploy(userid, songid, createdAt);
 
   await contract.deployed();
 
+  // TODO REMOVE
   console.log('Your_Contract deployed to:', contract.address);
+
+  return contract.address;
 }
 
+// TODO REMOVE
 deployContract('userid', 'songid', 'createdAt');
 
-async function setAndGet(contractAddress) {
-  const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+// async function setAndGet(contractAddress) {
+//   const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
-  // Set a value
-  const tx = await contract.set(42);
-  await tx.wait(); // Wait for the transaction to be mined
+//   // Set a value
+//   const tx = await contract.set(42);
+//   await tx.wait(); // Wait for the transaction to be mined
 
-  // Get the stored value
-  const value = await contract.get();
-  console.log(`Stored value is: ${value}`);
-}
+//   // Get the stored value
+//   const value = await contract.get();
+//   console.log(`Stored value is: ${value}`);
+// }
 
 //setAndGet('0xb114516fB0E3aA01a44df82485f3729A119Ce9A9');
