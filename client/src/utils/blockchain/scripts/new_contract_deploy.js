@@ -1,6 +1,6 @@
-import { ethers } from "ethers";
-import { privateKey, calderaRPCUrl, calderaChainId } from "../secrets.json";
-import solc from "solc";
+import { ethers } from 'ethers';
+import { privateKey, calderaRPCUrl, calderaChainId } from '../secrets.json';
+import solc from 'solc';
 
 var contract = `
   pragma solidity >=0.7.3;
@@ -30,15 +30,15 @@ var contract = `
   }`;
 
 var input = {
-  language: "Solidity",
-  sources: { "audio.sol": { content: contract } },
-  settings: { outputSelection: { "*": { "*": ["*"] } } },
+  language: 'Solidity',
+  sources: { 'audio.sol': { content: contract } },
+  settings: { outputSelection: { '*': { '*': ['*'] } } },
 };
 
 var output = JSON.parse(solc.compile(JSON.stringify(input)));
-var contractName = "AudioContract";
-var bytecode = output.contracts["audio.sol"][contractName].evm.bytecode.object;
-var abi = output.contracts["audio.sol"][contractName].abi;
+var contractName = 'AudioContract';
+var bytecode = output.contracts['audio.sol'][contractName].evm.bytecode.object;
+var abi = output.contracts['audio.sol'][contractName].abi;
 
 const provider = new ethers.providers.JsonRpcProvider(calderaRPCUrl);
 
@@ -53,17 +53,22 @@ export async function deployContract(userid, createdAt) {
   const factory = new ethers.ContractFactory(
     contractABI,
     contractBytecode,
-    wallet,
+    wallet
   );
-  const contract = await factory.deploy(userid, createdAt);
+
+  const overrides = {
+    gasLimit: 1000000, // Example gas limit; adjust this value based on your needs
+  };
+
+  const contract = await factory.deploy(userid, createdAt, overrides);
 
   await contract.deployed();
 
   // TODO REMOVE
-  console.log("Your_Contract deployed to:", contract.address);
+  console.log('Your_Contract deployed to:', contract.address);
 
   return contract.address;
 }
 
 // TODO REMOVE
-deployContract("FAKE USER", "CREATED NOW");
+deployContract('FAKE USER', 'CREATED NOW');
