@@ -1,3 +1,5 @@
+import { Song } from "@/db/types";
+
 export type AuthToken = {
   email: string;
   created_at: number;
@@ -19,6 +21,7 @@ export type RegisterPostRequest = {
 
 export type ChainPostRequest = {
   s3_key: string;
+  file_name: string;
 };
 
 export type EmailTemplate = {
@@ -39,4 +42,13 @@ type Response<T> = {
 
 export type GetPresignedUrlResponse = Response<{
   url: string;
+  key: string;
+}>;
+
+export type PutChainResponse = Response<{
+  song_id: string;
+}>;
+
+export type SongsGetResponse = Response<{
+  songs: Pick<Song, "s3Key" | "chainAddress" | "id" | "fileName">;
 }>;

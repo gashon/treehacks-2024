@@ -7,9 +7,11 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Song {
-  chainId: string;
+  chainAddress: string;
   createdAt: Generated<Timestamp>;
+  fileName: string;
   id: Generated<string>;
+  s3Key: string;
   updatedAt: Generated<Timestamp>;
   userId: string;
 }

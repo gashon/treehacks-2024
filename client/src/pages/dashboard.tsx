@@ -1,11 +1,12 @@
 import { useCallback, FC } from "react";
 import { useDropzone } from "react-dropzone";
-import { useUploadFile, getPresignedUrl } from "@/features/song";
+import { useUploadFile, getPresignedUrl, uploadToChain } from "@/features/song";
 
 const Dropzone: FC = () => {
   const uploadFileMutation = useUploadFile();
 
   const onDrop = useCallback(
+    // TODO add notifications/loading indicator
     async (acceptedFiles) => {
       acceptedFiles.forEach(async (file: File) => {
         // Get presigned URL for each file
@@ -14,13 +15,15 @@ const Dropzone: FC = () => {
           fileType: file.type,
         });
 
-        console.log("trying", presignedResponse);
         if (presignedResponse.url) {
           // Upload file to the presigned URL
           uploadFileMutation.mutate({
             signedUrl: presignedResponse.url,
             file: file,
           });
+
+          await uploadToChain({ s3Key: presignedResponse.key });
+          console.log("uploaded");
         }
       });
     },
@@ -29,9 +32,9 @@ const Dropzone: FC = () => {
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
-    // accept: {
-    //   "audio/*": [".mp3", ".wav", ".aac"],
-    // },
+    accept: {
+      "audio/*": [".mp3", ".wav", ".aac"],
+    },
   });
 
   const files = acceptedFiles.map((file: File) => (

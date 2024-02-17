@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { AUTH_COOKIE } from "@/consts";
-import { verifyToken } from "@/lib/jwt";
-import { getPresignedUrl } from "@/lib/s3";
-import { AuthToken, S3PresignedGetRequest } from "@/types";
+import { createToken, verifyToken } from "@/lib/jwt";
+import { AuthToken } from "@/types";
+import { db } from "@/db";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,6 +13,7 @@ export default async function handler(
     res.json({
       message: "Method not allowed",
     });
+
     return;
   }
 
@@ -24,18 +25,16 @@ export default async function handler(
     return;
   }
 
-  const { file_name, file_type } = req.query as S3PresignedGetRequest;
-
-  const { putUrl, key } = await getPresignedUrl(file_type, {
-    type: "song",
-    userEmail: token.email,
-    fileName: file_name,
-  });
+  // TODO(@gashon) update query to insert on duplicate key
+  const songs = await db
+    .selectFrom("song")
+    .select(["s3Key", "id", "chainAddress", "fileName"])
+    .where("userId", "=", token.user_id)
+    .execute();
 
   res.json({
-    data: {
-      url: putUrl,
-      key,
-    },
+    data: { songs },
   });
+
+  return;
 }

@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { AUTH_COOKIE } from "@/consts";
 import { verifyToken } from "@/lib/jwt";
-import { getPresignedUrl } from "@/lib/s3";
 import { AuthToken, ChainPostRequest } from "@/types";
+// import * as chain from "@/utils/blockchain/scripts/new_contract_deployment.js";
+import { deployContract } from "@/utils/blockchain/scripts/new_contract_deploy";
 import { db } from "@/db";
 
 export default async function handler(
@@ -25,11 +26,27 @@ export default async function handler(
     return;
   }
 
-  const { s3_key } = req.body as ChainPostRequest;
+  const { s3_key, file_name } = req.body as ChainPostRequest;
 
-  await db.res.json({
+  const chainAddress = await deployContract(
+    token.user_id,
+    new Date().getTime(),
+  );
+
+  const song = await db
+    .insertInto("song")
+    .values({
+      s3Key: s3_key,
+      userId: token.user_id,
+      chainAddress,
+      fileName: file_name,
+    })
+    .returning("id")
+    .execute();
+
+  res.json({
     data: {
-      url: putUrl,
+      song_id: song,
     },
   });
 }
