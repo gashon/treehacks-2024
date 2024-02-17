@@ -6,9 +6,9 @@ type Presigned = {
   fileType: S3PresignedGetRequest["file_type"];
 };
 
-export const getPresigned = async ({ fileName, fileType }: Presigned) => {
+export const getPresignedUrl = async ({ fileName, fileType }: Presigned) => {
   const res = await fetch(
-    `/api/api/s3/presigned?file_name=${fileName}&file_type=${fileType}`,
+    `/api/s3/presigned?file_name=${fileName}&file_type=${fileType}`,
     {
       method: "GET",
       headers: {
@@ -24,6 +24,6 @@ export const getPresigned = async ({ fileName, fileType }: Presigned) => {
 export const useGetPresignedUrl = ({ fileName, fileType }: Presigned) => {
   return useQuery({
     queryKey: ["presigned"],
-    queryFn: () => getPresigned({ fileName, fileType }),
+    queryFn: () => getPresignedUrl({ fileName, fileType }),
   });
 };

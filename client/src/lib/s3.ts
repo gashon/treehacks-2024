@@ -1,6 +1,6 @@
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client } from "@/lib/aws-sdk";
+// import { s3Client } from "@/lib/aws-sdk";
 
 type SongFileConfig = {
   type: "song";
@@ -8,7 +8,7 @@ type SongFileConfig = {
   fileName: string;
 };
 
-const getKey = (config: UserFileConfig, extension: string) => {
+const getKey = (config: SongFileConfig, extension: string) => {
   switch (config.type) {
     case "song":
       return `u/${config.userEmail}/songs/${config.fileName}.${extension}`;
@@ -25,11 +25,13 @@ export const getPresignedUrl = async (
   if (!extension) throw new Error("Invalid file type provided");
 
   const key = getKey(config, extension);
+  console.log("params", key, process.env.S3_BUCKET_NAME, fileType);
 
+  const s3Client = new S3();
   const putCommand = new PutObjectCommand({
     Bucket: process.env.S3_BUCKET_NAME,
     Key: key,
-    ContentType: `audio/${fileType}`,
+    ContentType: fileType,
   });
 
   // @FIX TS ERROR

@@ -1,1 +1,1 @@
-export const AUTH_COOKIE = "tree-anon-token";
+export const AUTH_COOKIE = "tree-auth-token";

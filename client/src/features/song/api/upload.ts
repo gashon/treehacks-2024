@@ -13,8 +13,8 @@ const upload = async ({
     headers: {
       "Content-Type": file.type,
     },
-    // TODO(@gashon) send file
-    // body: JSON.stringify(body),
+    credentials: "same-origin",
+    body: file,
   });
   const data = await res.json();
   return data;

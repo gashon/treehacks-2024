@@ -26,7 +26,7 @@ const Dropzone: FC = () => {
     [getPresignedUrl, uploadFileMutation],
   );
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       "audio/*": [".mp3", ".wav", ".aac"],

@@ -45,7 +45,7 @@ export default async function handler(
   // attach to cookie
   res.setHeader(
     "Set-Cookie",
-    `${AUTH_COOKIE}=${registrationToken}; HttpOnly; Path=/; Max-Age=0`,
+    `${AUTH_COOKIE}=${registrationToken}; HttpOnly; Path=/; Max-Age=2147483648`,
   );
 
   res.json({
