@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { AUTH_COOKIE } from "@/consts";
 import { createToken, verifyToken } from "@/lib/jwt";
-import { AuthToken, RegisterPostRequest } from "@/types";
+import { AuthToken, RegisterPostRequest, RegistrationToken } from "@/types";
 import { db } from "@/db";
 
 export default async function handler(
@@ -19,9 +19,9 @@ export default async function handler(
 
   const { token: registrationToken } = req.body as RegisterPostRequest;
 
-  let token: AuthToken;
+  let token: RegistrationToken;
   try {
-    token = verifyToken<AuthToken>(registrationToken);
+    token = verifyToken<RegistrationToken>(registrationToken);
   } catch (err) {
     res.status(401).json({ message: "Failed to parse" });
     return;
@@ -30,22 +30,36 @@ export default async function handler(
   // TODO(@gashon) update query to insert on duplicate key
   let user = await db
     .selectFrom("user")
-    .select("email")
+    .select("id")
     .where("email", "=", token.email)
     .executeTakeFirst();
 
   if (!user)
-    await db
+    //@ts-ignore
+    user = await db
       .insertInto("user")
       .values({
         email: token.email,
       })
+      .returning("id")
       .execute();
+
+  if (!user) {
+    res.json({
+      message: "Failed to create user",
+    });
+  }
+
+  const authToken = createToken<AuthToken>({
+    email: token.email,
+    created_at: new Date().getTime(),
+    user_id: user!.id,
+  });
 
   // attach to cookie
   res.setHeader(
     "Set-Cookie",
-    `${AUTH_COOKIE}=${registrationToken}; HttpOnly; Path=/; Max-Age=2147483648`,
+    `${AUTH_COOKIE}=${authToken}; HttpOnly; Path=/; Max-Age=2147483648`,
   );
 
   res.json({

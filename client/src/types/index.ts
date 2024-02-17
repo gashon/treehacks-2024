@@ -1,6 +1,12 @@
 export type AuthToken = {
   email: string;
   created_at: number;
+  user_id: string;
+};
+
+export type RegistrationToken = {
+  email: string;
+  created_at: number;
 };
 
 export type LoginPostRequest = {
@@ -9,6 +15,10 @@ export type LoginPostRequest = {
 
 export type RegisterPostRequest = {
   token: string;
+};
+
+export type ChainPostRequest = {
+  s3_key: string;
 };
 
 export type EmailTemplate = {

@@ -1,5 +1,4 @@
-import { AUTH_COOKIE } from "@/consts";
-import { AuthToken, LoginPostRequest } from "@/types";
+import { RegistrationToken, LoginPostRequest } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createToken } from "@/lib/jwt";
 import { sendLoginEmail } from "@/util/send-email";
@@ -17,7 +16,7 @@ export default async function handler(
   }
 
   const { email } = req.body as LoginPostRequest;
-  const token = createToken<AuthToken>({
+  const token = createToken<RegistrationToken>({
     email,
     created_at: new Date().getTime(),
   });

@@ -3,13 +3,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { AUTH_COOKIE } from "@/consts";
 import { verifyToken } from "@/lib/jwt";
 import { getPresignedUrl } from "@/lib/s3";
-import { AuthToken, S3PresignedGetRequest } from "@/types";
+import { AuthToken, ChainPostRequest } from "@/types";
+import { db } from "@/db";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (req.method !== "GET") {
+  if (req.method !== "PUT") {
     res.json({
       message: "Method not allowed",
     });
@@ -24,15 +25,9 @@ export default async function handler(
     return;
   }
 
-  const { file_name, file_type } = req.query as S3PresignedGetRequest;
+  const { s3_key } = req.body as ChainPostRequest;
 
-  const { putUrl, key } = await getPresignedUrl(file_type, {
-    type: "song",
-    userEmail: token.email,
-    fileName: file_name,
-  });
-
-  res.json({
+  await db.res.json({
     data: {
       url: putUrl,
     },

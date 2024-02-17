@@ -11,7 +11,7 @@ type SongFileConfig = {
 const getKey = (config: SongFileConfig, extension: string) => {
   switch (config.type) {
     case "song":
-      return `u/${config.userEmail}/songs/${config.fileName}.${extension}`;
+      return `u/${config.userEmail}/songs/${config.fileName}`;
     default:
       throw new Error("Invalid folder provided");
   }
@@ -37,5 +37,5 @@ export const getPresignedUrl = async (
     expiresIn: 3600,
   });
 
-  return putUrl;
+  return { putUrl, key };
 };
