@@ -13,6 +13,24 @@ import {
   submitDMCAClaim,
 } from '@/features/song';
 
+const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
+  return (
+    // Increased z-index for modal overlay to ensure it's above everything
+    <div className='bg-black bg-opacity-50 fixed flex inset-0 items-center justify-center z-50'>
+      <div
+        className='bg-white p-8 rounded-lg'
+        style={{ width: '60%', height: 'auto', maxWidth: '800px', zIndex: 60 }}>
+        {' '}
+        {/* Adjusted size */}
+        <button onClick={onClose}>X</button>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
@@ -173,6 +191,11 @@ const SongsList: FC = () => {
   const [audio, setAudio] = useState<Audio | undefined>(undefined);
   const visualizerRef = useRef<HTMLCanvasElement>(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   if (isLoading) return <p>Loading</p>;
   if (!data?.data?.songs) return <p>No songs</p>;
 
@@ -205,6 +228,61 @@ const SongsList: FC = () => {
 
   return (
     <section className='flex flex-col gap-2'>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}>
+        <>
+          <h2 className='font-bold text-xl'>Copyright Infringements</h2>
+          <li
+            key={`song:${song.id}`}
+            className='flex flex-row items-center justify-between'>
+            <a href='https://www.youtube.com/watch?v=R7-ApK63X_U&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D'>
+              https://www.youtube.com/watch?v=R7-ApK63X_U&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D
+            </a>
+            <SubmitClaimButton />
+          </li>
+          <li
+            key={`song:${song.id}`}
+            className='flex flex-row items-center justify-between'>
+            <a href='https://www.youtube.com/watch?v=dM12YTZvQGw&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D'>
+              https://www.youtube.com/watch?v=dM12YTZvQGw&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D
+            </a>
+            <SubmitClaimButton />
+          </li>
+          <li
+            key={`song:${song.id}`}
+            className='flex flex-row items-center justify-between'>
+            <a href='https://www.youtube.com/watch?v=Go_p6oD7AIE&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
+              https://www.youtube.com/watch?v=Go_p6oD7AIE&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
+            </a>
+            <SubmitClaimButton />
+          </li>
+          <li
+            key={`song:${song.id}`}
+            className='flex flex-row items-center justify-between'>
+            <a href='https://www.youtube.com/watch?v=Sj0DF0rRF18&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
+              https://www.youtube.com/watch?v=Sj0DF0rRF18&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
+            </a>
+            <SubmitClaimButton />
+          </li>
+          <li
+            key={`song:${song.id}`}
+            className='flex flex-row items-center justify-between'>
+            <a href='https://www.youtube.com/watch?v=BbWGlDi7M7M&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
+              https://www.youtube.com/watch?v=BbWGlDi7M7M&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
+            </a>
+            <SubmitClaimButton />
+          </li>
+          <li
+            key={`song:${song.id}`}
+            className='flex flex-row items-center justify-between'>
+            <a href='https://www.youtube.com/watch?v=SqJGCnfr7rc&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
+              https://www.youtube.com/watch?v=SqJGCnfr7rc&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
+            </a>
+            <SubmitClaimButton />
+          </li>
+        </>
+      </Modal>
       <p className='text-xl'>Your Songs</p>
       <ul className='flex flex-col gap-10'>
         {data.data.songs.map((song, index) => {
@@ -283,8 +361,6 @@ export default function Home() {
         <div className='mt-10'>
           <SongsList />
         </div>
-        {/* TODO: Add submit claim button to each song in the list */}
-        <SubmitClaimButton />
       </div>
     </main>
   );
