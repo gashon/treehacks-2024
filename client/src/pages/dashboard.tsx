@@ -1,6 +1,7 @@
 import { useCallback, useState, useRef, FC, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { AiOutlineSound } from 'react-icons/ai';
+import { Toaster, toast } from 'sonner';
 //import WaveSurfer from "wavesurfer.js";
 
 import { queryClient } from '@/lib/react-query';
@@ -9,12 +10,12 @@ import {
   getPresignedUrl,
   useGetSongs,
   uploadToChain,
+  submitDMCAClaim,
 } from '@/features/song';
 
 const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
-  // Hardcoded list of completion steps
   const steps = [
     'Opening media file',
     'Verifying originality with Sonoverse ML',
@@ -224,15 +225,50 @@ const Banner: FC = () => (
   </header>
 );
 
+const SubmitClaimButton: FC = () => {
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const handleClick = () => {
+    setIsDisabled(true);
+    const dmcaSubmissionToast = toast('Submitting DMCA claim...');
+
+    toast.loading('Submitting DMCA claim... ', {
+      id: dmcaSubmissionToast,
+    });
+
+    setTimeout(() => {
+      toast.success('Submitted DMCA claim', {
+        id: dmcaSubmissionToast,
+      });
+    }, 1500);
+  };
+
+  return (
+    <button
+      id='submitClaimBtn'
+      disabled={isDisabled}
+      onClick={handleClick}
+      className={`bg-yellow-400 border-1 border-black font-bold px-3 py-1 rounded-full text-black ${
+        isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-500'
+      }`}>
+      Submit Claim
+    </button>
+  );
+};
+
 export default function Home() {
   return (
     <main className='flex h-full justify-center mt-10 w-full'>
+      <Toaster />
+
       <div className='lg:w-3/4 w-11/12'>
         <Banner />
         <Dropzone />
         <div className='mt-10'>
           <SongsList />
         </div>
+        {/* TODO: Add submit claim button to each song in the list */}
+        <SubmitClaimButton />
       </div>
     </main>
   );
