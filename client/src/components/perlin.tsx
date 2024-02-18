@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Sketch from 'react-p5';
 import p5Types, { Color } from 'p5'; // Import this for typechecking and intellisense
 
@@ -19,6 +19,16 @@ interface Particle {
 }
 
 const Perlin: React.FC<ComponentProps> = (props: ComponentProps) => {
+  useEffect(() => {
+    // Cleanup function to remove the canvas
+    return function cleanup() {
+      let canvas = document.querySelector('canvas');
+      if (canvas) {
+        canvas.remove();
+      }
+    };
+  }, []);
+
   let particles = [];
 
   // Setup function
