@@ -17,6 +17,7 @@ const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   // Hardcoded list of completion steps
   const steps = [
     'Opening media file',
+    'Verifying originality with Sonoverse ML',
     'Generating presigned URL',
     'Uploading file',
     'Hashing file',
