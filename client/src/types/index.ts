@@ -1,4 +1,4 @@
-import { Song } from "@/db/types";
+import { Song } from '@/db/types';
 
 export type AuthToken = {
   email: string;
@@ -23,6 +23,12 @@ export type ChainPostRequest = {
   s3_key: string;
   file_name: string;
   file_type: string;
+};
+
+export type DMCAClaimRequest = {
+  song_id: string;
+  file_name: string;
+  audio_link: string;
 };
 
 export type EmailTemplate = {
@@ -52,5 +58,5 @@ export type PutChainResponse = Response<{
 }>;
 
 export type SongsGetResponse = Response<{
-  songs: Pick<Song, "s3Key" | "chainAddress" | "id" | "fileName">[];
+  songs: Pick<Song, 's3Key' | 'chainAddress' | 'id' | 'fileName'>[];
 }>;
