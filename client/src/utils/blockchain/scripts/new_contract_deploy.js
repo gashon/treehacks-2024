@@ -2,50 +2,55 @@ import { ethers } from 'ethers';
 import { privateKey, calderaRPCUrl, calderaChainId } from '../secrets.json';
 import solc from 'solc';
 
-var contract = `
-  pragma solidity >=0.7.3;
+import AudioContractABI from '../contracts/AudioContractABI.json';
+import { bytecode as AudioContractBytecode } from '../contracts/AudioContractBytecode.json';
 
-  contract AudioContract {
-    string public userId;
-    string public createdAt;
+// var contract = `
+//   pragma solidity >=0.7.3;
 
-    constructor(string memory initUserId, string memory initCreatedAt) {
-        userId = initUserId;
-        createdAt = initCreatedAt;
-    }
+//   contract AudioContract {
+//     string public userId;
+//     string public createdAt;
 
-    function updateUserId(string memory newUserId) public {
-        string memory oldUserId = userId;
-        userId = newUserId;
-    }
+//     constructor(string memory initUserId, string memory initCreatedAt) {
+//         userId = initUserId;
+//         createdAt = initCreatedAt;
+//     }
 
-    function updateCreatedAt(string memory newCreatedAt) public {
-        string memory oldCreatedAt = createdAt;
-        createdAt = newCreatedAt;
-    }
+//     function updateUserId(string memory newUserId) public {
+//         userId = newUserId;
+//     }
 
-    function get() public view returns (string memory, string memory) {
-      return (userId, createdAt);
-    }
-  }`;
+//     function updateCreatedAt(string memory newCreatedAt) public {
+//         createdAt = newCreatedAt;
+//     }
 
-var input = {
-  language: 'Solidity',
-  sources: { 'audio.sol': { content: contract } },
-  settings: { outputSelection: { '*': { '*': ['*'] } } },
-};
+//     function get() public view returns (string memory, string memory) {
+//       return (userId, createdAt);
+//     }
+//   }`;
 
-var output = JSON.parse(solc.compile(JSON.stringify(input)));
-var contractName = 'AudioContract';
-var bytecode = output.contracts['audio.sol'][contractName].evm.bytecode.object;
-var abi = output.contracts['audio.sol'][contractName].abi;
+// var input = {
+//   language: 'Solidity',
+//   sources: { 'AudioContract.sol': { content: contract } },
+//   settings: { outputSelection: { '*': { '*': ['*'] } } },
+// };
+
+// var output = JSON.parse(solc.compile(JSON.stringify(input)));
+// var contractName = 'AudioContract';
+// var bytecode =
+//   output.contracts['AudioContract.sol'][contractName].evm.bytecode.object;
+// var abi = output.contracts['AudioContract.sol'][contractName].abi;
 
 const provider = new ethers.providers.JsonRpcProvider(calderaRPCUrl);
 
 const wallet = new ethers.Wallet(privateKey, provider);
 
-var contractABI = abi;
-var contractBytecode = bytecode;
+// var contractABI = abi;
+// var contractBytecode = bytecode;
+
+var contractABI = AudioContractABI;
+var contractBytecode = AudioContractBytecode;
 
 // Pass in the userid, and createdAt
 // Returns the contract address that was deployed on our chain

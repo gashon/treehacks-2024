@@ -1,17 +1,17 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { AUTH_COOKIE } from "@/consts";
-import { createToken, verifyToken } from "@/lib/jwt";
-import { AuthToken, RegisterPostRequest, RegistrationToken } from "@/types";
-import { db } from "@/db";
+import { AUTH_COOKIE } from '@/consts';
+import { createToken, verifyToken } from '@/lib/jwt';
+import { AuthToken, RegisterPostRequest, RegistrationToken } from '@/types';
+import { db } from '@/db';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
+  if (req.method !== 'POST') {
     res.json({
-      message: "Method not allowed",
+      message: 'Method not allowed',
     });
 
     return;
@@ -23,30 +23,30 @@ export default async function handler(
   try {
     token = verifyToken<RegistrationToken>(registrationToken);
   } catch (err) {
-    res.status(401).json({ message: "Failed to parse" });
+    res.status(401).json({ message: 'Failed to parse' });
     return;
   }
 
   // TODO(@gashon) update query to insert on duplicate key
   let user = await db
-    .selectFrom("user")
-    .select("id")
-    .where("email", "=", token.email)
+    .selectFrom('user')
+    .select('id')
+    .where('email', '=', token.email)
     .executeTakeFirst();
 
   if (!user)
     //@ts-ignore
     user = await db
-      .insertInto("user")
+      .insertInto('user')
       .values({
         email: token.email,
       })
-      .returning("id")
+      .returning('id')
       .execute();
 
   if (!user) {
     res.json({
-      message: "Failed to create user",
+      message: 'Failed to create user',
     });
   }
 
@@ -58,12 +58,12 @@ export default async function handler(
 
   // attach to cookie
   res.setHeader(
-    "Set-Cookie",
-    `${AUTH_COOKIE}=${authToken}; HttpOnly; Path=/; Max-Age=2147483648`,
+    'Set-Cookie',
+    `${AUTH_COOKIE}=${authToken}; HttpOnly; Path=/; Max-Age=2147483648`
   );
 
   res.json({
-    message: "success",
+    message: 'success',
   });
 
   return;

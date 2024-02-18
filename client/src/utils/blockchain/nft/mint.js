@@ -24,7 +24,8 @@ async function mintNFT(recipientEmail, audio_name, ipfshash) {
       metadata: {
         name: audio_name,
         image,
-        animation_url: audio_url,
+        animation_url:
+          'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_100KB_MP3.mp3',
         description: 'My first NFT using Crossmint',
       },
     }),

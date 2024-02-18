@@ -1,6 +1,6 @@
-import React from "react";
-import Sketch from "react-p5";
-import p5Types, { Color } from "p5"; // Import this for typechecking and intellisense
+import React from 'react';
+import Sketch from 'react-p5';
+import p5Types, { Color } from 'p5'; // Import this for typechecking and intellisense
 
 interface ComponentProps {}
 
@@ -55,7 +55,12 @@ const Perlin: React.FC<ComponentProps> = (props: ComponentProps) => {
     }
   };
 
-  return <Sketch setup={setup} draw={draw} />;
+  return (
+    <Sketch
+      setup={setup}
+      draw={draw}
+    />
+  );
 };
 
 export default Perlin;
