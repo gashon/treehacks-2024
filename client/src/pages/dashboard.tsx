@@ -67,9 +67,9 @@ const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   if (!isOpen && !isAnimating) return null;
 
   return (
-    <div className="bg-black text-black bg-opacity-60 fixed flex inset-0 items-center justify-center z-50">
-      <div className="bg-white max-w-2xl md:p-12 mx-4 p-8 rounded-lg shadow-xl w-full">
-        <div className="flex justify-center">
+    <div className='bg-black bg-opacity-60 fixed flex inset-0 items-center justify-center text-black z-50'>
+      <div className='bg-white max-w-2xl md:p-12 mx-4 p-8 rounded-lg shadow-xl w-full'>
+        <div className='flex justify-center'>
           {/* Inline style for the spinner animation */}
           <div className='animate-spin border-b-2 border-blue-500 h-8 rounded-full w-8'></div>
         </div>
@@ -132,7 +132,7 @@ const Dropzone: FC = () => {
           queryClient.invalidateQueries({ queryKey: ['songs'] });
 
           setIsUploading(false); // TODO fix
-          console.log("uploaded");
+          console.log('uploaded');
         }
       });
     },
@@ -226,7 +226,7 @@ const SongsList: FC = () => {
   };
 
   const handleNotificationsOpen = () => {
-    console.log('here');
+    handleOpenModal();
   };
 
   return (
@@ -289,7 +289,7 @@ const SongsList: FC = () => {
       <p className='text-xl'>Your Songs</p>
       <ul className='flex flex-col gap-10'>
         {data.data.songs.map((song, index) => {
-          const isFirst = index === data.data.songs.length -1;
+          const isFirst = index === data.data.songs.length - 1;
           return (
             <li
               key={`song:${song.id}`}
@@ -346,9 +346,8 @@ const SubmitClaimButton: FC = () => {
       disabled={isDisabled}
       onClick={handleClick}
       className={`bg-yellow-400 border-1 border-black font-bold px-3 py-1 rounded-full text-black ${
-        isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-500"
-      }`}
-    >
+        isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-500'
+      }`}>
       Submit Claim
     </button>
   );
@@ -356,13 +355,13 @@ const SubmitClaimButton: FC = () => {
 
 export default function Home() {
   return (
-    <main className="800 flex justify-center min-h-screen mt-10 w-full">
+    <main className='800 flex justify-center min-h-screen mt-10 w-full'>
       <Toaster />
 
-      <div className="lg:w-3/4 w-11/12">
+      <div className='lg:w-3/4 w-11/12'>
         <Banner />
         <Dropzone />
-        <div className="mt-10">
+        <div className='mt-10'>
           <SongsList />
         </div>
       </div>
