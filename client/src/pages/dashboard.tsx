@@ -1,7 +1,7 @@
-import { useCallback, useState, useRef, FC, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { AiOutlineSound } from 'react-icons/ai';
-import { Toaster, toast } from 'sonner';
+import { useCallback, useState, useRef, FC, useEffect } from "react";
+import { useDropzone } from "react-dropzone";
+import { AiOutlineSound } from "react-icons/ai";
+import { Toaster, toast } from "sonner";
 //import WaveSurfer from "wavesurfer.js";
 
 import { queryClient } from "@/lib/react-query";
@@ -11,7 +11,7 @@ import {
   useGetSongs,
   uploadToChain,
   submitDMCAClaim,
-} from '@/features/song';
+} from "@/features/song";
 
 const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -229,14 +229,14 @@ const SubmitClaimButton: FC = () => {
 
   const handleClick = () => {
     setIsDisabled(true);
-    const dmcaSubmissionToast = toast('Submitting DMCA claim...');
+    const dmcaSubmissionToast = toast("Submitting DMCA claim...");
 
-    toast.loading('Submitting DMCA claim... ', {
+    toast.loading("Submitting DMCA claim... ", {
       id: dmcaSubmissionToast,
     });
 
     setTimeout(() => {
-      toast.success('Submitted DMCA claim', {
+      toast.success("Submitted DMCA claim", {
         id: dmcaSubmissionToast,
       });
     }, 1500);
@@ -244,12 +244,13 @@ const SubmitClaimButton: FC = () => {
 
   return (
     <button
-      id='submitClaimBtn'
+      id="submitClaimBtn"
       disabled={isDisabled}
       onClick={handleClick}
       className={`bg-yellow-400 border-1 border-black font-bold px-3 py-1 rounded-full text-black ${
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-500'
-      }`}>
+        isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-500"
+      }`}
+    >
       Submit Claim
     </button>
   );
@@ -257,7 +258,7 @@ const SubmitClaimButton: FC = () => {
 
 export default function Home() {
   return (
-    <main className='flex h-full justify-center mt-10 w-full'>
+    <main className="flex min-h-screen justify-center mt-10 w-full 800">
       <Toaster />
 
       <div className="lg:w-3/4 w-11/12">
