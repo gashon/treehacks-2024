@@ -289,7 +289,7 @@ const SongsList: FC = () => {
       <p className='text-xl'>Your Songs</p>
       <ul className='flex flex-col gap-10'>
         {data.data.songs.map((song, index) => {
-          const isFirst = index === 0;
+          const isFirst = index === data.data.songs.length -1;
           return (
             <li
               key={`song:${song.id}`}
@@ -346,8 +346,9 @@ const SubmitClaimButton: FC = () => {
       disabled={isDisabled}
       onClick={handleClick}
       className={`bg-yellow-400 border-1 border-black font-bold px-3 py-1 rounded-full text-black ${
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-500'
-      }`}>
+        isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-500"
+      }`}
+    >
       Submit Claim
     </button>
   );
@@ -355,7 +356,7 @@ const SubmitClaimButton: FC = () => {
 
 export default function Home() {
   return (
-    <main className='800 flex justify-center min-h-screen mt-10 w-full'>
+    <main className="800 flex justify-center min-h-screen mt-10 w-full">
       <Toaster />
 
       <div className="lg:w-3/4 w-11/12">
