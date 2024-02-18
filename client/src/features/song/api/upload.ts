@@ -1,5 +1,6 @@
 import { RegisterPostRequest } from "@/types";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/react-query";
 
 const upload = async ({
   signedUrl,
@@ -23,5 +24,8 @@ export const useUploadFile = () => {
   return useMutation({
     mutationKey: ["upload"],
     mutationFn: upload,
+    onSuccess: () => {
+      // queryClient.invalidateQueries({ queryKey: ["songs"] });
+    },
   });
 };

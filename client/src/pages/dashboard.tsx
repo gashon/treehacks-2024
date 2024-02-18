@@ -1,5 +1,6 @@
 import { useCallback, FC } from "react";
 import { useDropzone } from "react-dropzone";
+import { queryClient } from "@/lib/react-query";
 import {
   useUploadFile,
   getPresignedUrl,
@@ -31,6 +32,9 @@ const Dropzone: FC = () => {
             fileName: file.name,
             s3Key: presignedResponse.key,
           });
+
+          queryClient.invalidateQueries({ queryKey: ["songs"] });
+
           console.log("uploaded");
         }
       });
