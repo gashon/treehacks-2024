@@ -13,7 +13,7 @@ export default function Home() {
   };
 
   return (
-    <div className='bg-gradient-to-r flex from-cyan-500 h-screen items-center justify-center to-blue-500'>
+    <div className='bg-gradient-to-r flex from-lgray-500 h-screen items-center justify-center to-gray-500'>
       <form
         onSubmit={handleSubmit}
         className='bg-white flex flex-col gap-4 p-8 rounded-lg shadow-xl w-96'>
