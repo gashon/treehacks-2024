@@ -2,7 +2,7 @@ import { useCallback, useState, useRef, FC, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { AiOutlineSound } from "react-icons/ai";
 import { Toaster, toast } from "sonner";
-//import WaveSurfer from "wavesurfer.js";
+import { WaveSurfer } from "wavesurfer-react";
 
 import { queryClient } from "@/lib/react-query";
 import {
@@ -152,20 +152,20 @@ const Dropzone: FC = () => {
   );
 };
 
-// const AudioVisualizer: FC<{ url: string }> = ({ url }) => {
-// const wavesurferRef = useRef(null);
-// useEffect(() => {
-//   if (wavesurferRef.current) {
-//     wavesurferRef.current.load(url);
-//   }
-// }, [url]);
-// return (
-//   <WaveSurfer
-//     ref={wavesurferRef}
-//     options={{ waveColor: 'violet', progressColor: 'purple' }}
-//   />
-// );
-// };
+const AudioVisualizer: FC<{ url: string }> = ({ url }) => {
+  const wavesurferRef = useRef(null);
+  useEffect(() => {
+    if (wavesurferRef.current) {
+      wavesurferRef.current.load(url);
+    }
+  }, [url]);
+  return (
+    <WaveSurfer
+      url={url}
+      options={{ waveColor: "violet", progressColor: "purple" }}
+    />
+  );
+};
 
 const SongsList: FC = () => {
   const { data, isLoading } = useGetSongs();
@@ -210,7 +210,7 @@ const SongsList: FC = () => {
               className="flex flex-row items-center justify-between"
             >
               <p className="text-lg">{song.fileName}</p>
-              {/* {audioUrl && <AudioVisualizer url={audioUrl} />} */}
+              {audioUrl && <AudioVisualizer url={audioUrl} />}
               <div className="cursor-pointer" onClick={() => playAudio(song)}>
                 <AiOutlineSound />
               </div>
