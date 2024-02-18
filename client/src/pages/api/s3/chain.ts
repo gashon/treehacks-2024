@@ -28,25 +28,28 @@ export default async function handler(
 
   const { s3_key, file_name } = req.body as ChainPostRequest;
 
-  const chainAddress = await deployContract(
-    token.user_id,
-    new Date().toISOString(),
-  );
+  await deployContract("FAKE USER", "CREATED NOW");
 
-  const song = await db
-    .insertInto("song")
-    .values({
-      s3Key: s3_key,
-      userId: token.user_id,
-      chainAddress,
-      fileName: file_name,
-    })
-    .returning("*")
-    .execute();
-
-  res.json({
-    data: {
-      song,
-    },
-  });
+  res.json({});
+  // const chainAddress = await deployContract(
+  //   token.user_id,
+  //   new Date().toISOString(),
+  // );
+  //
+  // const song = await db
+  //   .insertInto("song")
+  //   .values({
+  //     s3Key: s3_key,
+  //     userId: token.user_id,
+  //     chainAddress,
+  //     fileName: file_name,
+  //   })
+  //   .returning("*")
+  //   .execute();
+  //
+  // res.json({
+  //   data: {
+  //     song,
+  //   },
+  // });
 }

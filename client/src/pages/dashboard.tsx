@@ -52,24 +52,28 @@ const Dropzone: FC = () => {
   ));
 
   return (
-    <section className="container">
-      <div {...getRootProps({ className: "dropzone" })}>
+    <section className="container mx-auto w-full ">
+      <div
+        {...getRootProps({
+          className:
+            "bg-zinc-900 hover:bg-zinc-800 w-full flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-md cursor-pointer ",
+        })}
+      >
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>Click to upload your music</p>
       </div>
-      <aside>
-        <h4>Files</h4>
-        <ul>{files}</ul>
-      </aside>
+      {files?.length > 0 && (
+        <aside className="mt-4">
+          <h4 className="text-lg font-semibold">Files</h4>
+          <ul>{files}</ul>
+        </aside>
+      )}
     </section>
   );
 };
 
 const SongsList: FC = () => {
-  const {
-    data: { data },
-    isLoading,
-  } = useGetSongs();
+  const { data, isLoading } = useGetSongs();
 
   if (isLoading) return <p>Loading</p>;
 
@@ -77,13 +81,20 @@ const SongsList: FC = () => {
   return <></>;
 };
 
+const Banner: FC = () => (
+  <header className="mb-10">
+    <h1 className="text-3xl">Sonoverse</h1>
+  </header>
+);
+
 export default function Home() {
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24`}
-    >
-      <Dropzone />
-      <SongsList />
+    <main className="w-full h-full flex justify-center mt-10">
+      <div className="w-11/12 lg:w-3/4">
+        <Banner />
+        <Dropzone />
+        <SongsList />
+      </div>
     </main>
   );
 }
