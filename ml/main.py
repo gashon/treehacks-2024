@@ -8,6 +8,7 @@ app = Flask(__name__)
 CORS(app)
 FILE_PATH1 = 'local1.mp3'
 FILE_PATH2 = 'local2.mp3'
+FILE_PATH3 = 'local3.mp3'
 @app.route('/ml/', methods=['POST'])
 def entry():
     url1 = request.get_json()['url1']
@@ -49,6 +50,20 @@ def entry():
             'similarity_mod': similarity_mod
             }
     )
+
+
+@app.route('/dmca/', methods=['POST'])
+def enforce():
+   
+    url = request.get_json()['url']
+    response = requests.get(url)
+    if response.status_code == 200:
+    # Write the audio content to a local file
+        with open(FILE_PATH3, 'wb') as audio_file:
+            audio_file.write(response.content)
+        print(f"Audio file downloaded and saved as {FILE_PATH3}")
+        return check_youtube(FILE_PATH3)
+
 
 
 if __name__ == '__main__':

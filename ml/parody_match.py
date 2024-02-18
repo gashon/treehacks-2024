@@ -5,7 +5,12 @@ import cohere
 import os
 import numpy as np
 import spacy
+from youtube_dl import YoutubeDL
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
+import googleapiclient.errors
 
+scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
 api_key = os.environ.get("COHERE_API_KEY")
 co = cohere.Client(api_key)
@@ -19,6 +24,82 @@ def load_file(path):
         lines = content.split('---')
 
     return [song.strip() for song in lines]
+
+def check_youtube(file_path):
+    lyrics1 = transcribe_audio(file_path)
+    features1 = load_audio_features(file_path, lyrics1)
+    keywords = get_keywords(lyrics)
+
+
+    # Disable OAuthlib's HTTPS verification when running locally.
+    # *DO NOT* leave this option enabled in production.
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
+    api_service_name = "youtube"
+    api_version = "v3"
+
+    # Get credentials and create an API client
+    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+        client_secrets_file, scopes)
+    credentials = flow.run_console()
+    youtube = googleapiclient.discovery.build(
+        api_service_name, api_version, credentials=credentials)
+
+    request = youtube.search().list(
+        part="snippet",
+        q=f"{keywords}"
+    )
+    response = request.execute()
+    flagged = []
+    for i in range(len(response['items'])):
+        item = response['items'][i]
+        if kind == 'youtube#video':
+            video_id = item['id']['videoId']
+            url = f'https://www.youtube.com/watch?v={video_id}'
+
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }],
+                'postprocessor_args': [
+                    '-ar', '16000'
+                ],
+                'prefer_ffmpeg': True,
+                'keepvideo': False,
+            }
+
+            with YoutubeDL(ydl_opts) as ydl:
+                yt_path = f'yt{i}.mp3'
+                ydl.download([yt_path])
+                lyrics2 = transcribe_audio(yt_path)
+                features2 = load_audio_features(yt_path, lyrics2)
+
+                similarity_mod = final_similarity(features1, features2)
+        
+                similarity_parody = predict(lyrics1, lyrics2).item()
+
+                if max(similarity_mod, similarity_parody) > 0.8:
+                    flagged.append(url)
+    return flagged
+
+
+            
+
+
+
+def get_keywords(lyrics):
+    response = co.chat(
+    model="command",
+    message=f"Give me a phrase to encapsulate these song lyrics: {lyrics}",
+
+    temperature=0.0, 
+    prompt_truncation="OFF", 
+    stream=False,
+    )
+    return response.text
 
 
 def embed_lyrics(lyrics):
