@@ -1,4 +1,7 @@
-## Sonoverse
+# Sonoverse
+Automating copyright detection for small artists 
+
+## TL; DR
 - Music piracy costs the U.S. economy [$12.5 billion annually](https://www.riaa.com/wp-content/uploads/2015/09/20120515_SoundRecordingPiracy.pdf).
 - Independent artists are the [fastest growing segment in the music industry](https://www.forbes.com/sites/melissamdaniels/2019/07/10/for-independent-musicians-goingyour-own-way-is-finally-starting-to-pay-off/), yet lack the funds and reach to enforce the Digital Millennium Copyright Act (DMCA).
 - We let artists **OWN** their work (stored on InterPlanetary File System) by tracking it on our own Sonoverse Ethereum L2 chain (powered by Caldera).
