@@ -1,17 +1,17 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { AUTH_COOKIE } from '@/consts';
-import { verifyToken } from '@/lib/jwt';
-import { getPresignedUrl } from '@/lib/s3';
-import { AuthToken, S3PresignedGetRequest } from '@/types';
+import { AUTH_COOKIE } from "@/consts";
+import { verifyToken } from "@/lib/jwt";
+import { getPresignedUrl } from "@/lib/s3";
+import { AuthToken, S3PresignedGetRequest } from "@/types";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  if (req.method !== 'GET') {
+  if (req.method !== "GET") {
     res.json({
-      message: 'Method not allowed',
+      message: "Method not allowed",
     });
     return;
   }
@@ -20,21 +20,22 @@ export default async function handler(
   try {
     token = verifyToken<AuthToken>(req.cookies[AUTH_COOKIE]);
   } catch (err) {
-    res.status(401).json({ message: 'Failed to parse' });
+    res.status(401).json({ message: "Failed to parse" });
     return;
   }
 
-  const { file_name, file_type } = req.query as S3PresignedGetRequest;
+  const { file_name, file_type, readonly } = req.query as S3PresignedGetRequest;
 
-  const { putUrl, key } = await getPresignedUrl(file_type, {
-    type: 'song',
+  const { url, key } = await getPresignedUrl(file_type, {
+    type: "song",
     userEmail: token.email,
     fileName: file_name,
+    readonly: !!readonly,
   });
 
   res.json({
     data: {
-      url: putUrl,
+      url,
       key,
     },
   });

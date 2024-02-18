@@ -1,5 +1,7 @@
 import { useCallback, FC } from "react";
 import { useDropzone } from "react-dropzone";
+import { AiOutlineSound } from "react-icons/ai";
+
 import { queryClient } from "@/lib/react-query";
 import {
   useUploadFile,
@@ -30,6 +32,7 @@ const Dropzone: FC = () => {
 
           await uploadToChain({
             fileName: file.name,
+            fileType: file.type,
             s3Key: presignedResponse.key,
           });
 
@@ -82,14 +85,35 @@ const SongsList: FC = () => {
   if (isLoading) return <p>Loading</p>;
   if (!data.data?.songs) return <p>No songs</p>;
 
+  const playAudio = async (song) => {
+    try {
+      const { data: presignedResponse } = await getPresignedUrl({
+        fileName: song.fileName,
+        fileType: song.fileType,
+      });
+      const audioUrl = presignedResponse.url;
+      console.log("AUDIO", audioUrl);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (error) {
+      console.error("Error playing the song", error);
+    }
+  };
+
   return (
     <section className="flex flex-col gap-2">
       <p className="text-xl">Your Songs</p>
-      <ul className="flex-col gap-1">
+      <ul className="flex-col gap-10">
         {data.data.songs.map((song) => {
           return (
-            <li key={`song:${song.id}`}>
+            <li
+              key={`song:${song.id}`}
+              className="flex flex-row justify-between items-center"
+            >
               <p className="text-lg">{song.fileName}</p>
+              <div className="cursor-pointer" onClick={() => playAudio(song)}>
+                <AiOutlineSound />
+              </div>
             </li>
           );
         })}

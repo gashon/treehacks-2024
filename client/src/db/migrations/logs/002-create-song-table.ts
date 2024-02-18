@@ -7,6 +7,7 @@ export async function up(db: Kysely<any>): Promise<void> {
       col.primaryKey().defaultTo(sql`gen_random_uuid()`),
     )
     .addColumn("user_id", "uuid", (col) => col.notNull().references("user.id"))
+    .addColumn("file_type", "varchar", (col) => col.notNull())
     .addColumn("file_name", "varchar", (col) => col.notNull())
     .addColumn("s3_key", "varchar", (col) => col.notNull())
     .addColumn("chain_address", "varchar", (col) => col.unique().notNull())
