@@ -47,14 +47,14 @@ const pinFileToIPFS = async (fileUrl, audioName) => {
       }
     );
 
-    console.log(res.data.IpfsHash);
+    // console.log(res.data.IpfsHash);
 
-    console.log(res.data);
+    // console.log(res.data);
   } catch (error) {
     console.log(error);
   }
 };
-pinFileToIPFS(
-  'https://treehacks-2024.s3.us-west-1.amazonaws.com/Part+1.m4a',
-  'Part 1.m4a'
-);
+// pinFileToIPFS(
+//   'https://treehacks-2024.s3.us-west-1.amazonaws.com/Part+1.m4a',
+//   'Part 1.m4a'
+// );
