@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-import { ethers } from 'ethers';
-import { privateKey, calderaRPCUrl, calderaChainId } from '../secrets.json';
-// import solc from 'solc';
-=======
 import { ethers } from "ethers";
 import { privateKey, calderaRPCUrl, calderaChainId } from "../secrets.json";
-import solc from "solc";
->>>>>>> 09a7551 (feat: invalidate queries)
-
+// import solc from 'solc';
 import AudioContractABI from "../contracts/AudioContractABI.json";
 import { bytecode as AudioContractBytecode } from "../contracts/AudioContractBytecode.json";
 
@@ -68,30 +61,15 @@ export async function deployContract(userid, createdAt) {
   );
 
   const overrides = {
-<<<<<<< HEAD
     gasLimit: 1000000,
-=======
-    gasLimit: 2_500_000, // Example gas limit; adjust this value based on your needs
->>>>>>> 09a7551 (feat: invalidate queries)
   };
 
   const contract = await factory.deploy(userid, createdAt, overrides);
 
   await contract.deployed();
 
-<<<<<<< HEAD
   // // TODO REMOVE
   // console.log('Your_Contract deployed to:', contract.address);
 
   return contract.address;
 }
-=======
-  // TODO REMOVE
-  console.log("Your_Contract deployed to:", contract.address);
-
-  return contract.address;
-}
-
-// TODO REMOVE
-deployContract("FAKE USER", "CREATED NOW");
->>>>>>> 09a7551 (feat: invalidate queries)
