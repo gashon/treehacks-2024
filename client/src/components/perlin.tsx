@@ -23,7 +23,10 @@ const Perlin: React.FC<ComponentProps> = (props: ComponentProps) => {
 
   // Setup function
   const setup = (p5: p5Types, canvasParentRef: Element) => {
-    p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef);
+    let canvasWidth = document.body.clientWidth;
+    let canvasHeight = document.body.clientHeight;
+
+    p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
 
     p5.background(0);
     p5.colorMode(p5.HSB);
