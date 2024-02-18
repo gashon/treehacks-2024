@@ -76,9 +76,22 @@ const SongsList: FC = () => {
   const { data, isLoading } = useGetSongs();
 
   if (isLoading) return <p>Loading</p>;
+  if (!data.data?.songs) return <p>No songs</p>;
 
-  console.log("data", data);
-  return <></>;
+  return (
+    <section className="flex flex-col gap-2">
+      <p className="text-xl">Your Songs</p>
+      <ul className="flex-col gap-1">
+        {data.data.songs.map((song) => {
+          return (
+            <li key={`song:${song.id}`}>
+              <p className="text-lg">{song.fileName}</p>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
 };
 
 const Banner: FC = () => (
@@ -93,7 +106,9 @@ export default function Home() {
       <div className="w-11/12 lg:w-3/4">
         <Banner />
         <Dropzone />
-        <SongsList />
+        <div className="mt-10">
+          <SongsList />
+        </div>
       </div>
     </main>
   );
