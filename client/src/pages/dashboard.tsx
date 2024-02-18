@@ -189,7 +189,11 @@ const SongsList: FC = () => {
         `https://treehacks-2024.s3.us-west-1.amazonaws.com/${song.s3Key}`,
       );
       setAudioUrl(url);
-      setAudio(new Audio(url));
+
+      const audio = new Audio(url);
+      audio.play();
+
+      setAudio(audio);
     } catch (error) {
       console.error("Error playing the song", error);
     }
