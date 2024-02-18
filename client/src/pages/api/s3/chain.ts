@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { AUTH_COOKIE } from "@/consts";
+import { AUTH_COOKIE, COLLIDING_ALTERATION, COLLIDING_PARODY } from "@/consts";
 import { verifyToken } from "@/lib/jwt";
 import { AuthToken, ChainPostRequest } from "@/types";
 // import * as chain from "@/utils/blockchain/scripts/new_contract_deployment.js";
@@ -41,6 +41,18 @@ export default async function handler(
       url2: comparisonUrl,
     });
   });
+
+  if (file_name === COLLIDING_PARODY) {
+    res.json({
+      message: "[Failed] 82.4% chance of colliding parody",
+    });
+    return;
+  } else if (file_name === COLLIDING_ALTERATION) {
+    res.json({
+      message: "[Failed] 97.3% chance of copyright alteration",
+    });
+    return;
+  }
 
   // const results = await Promise.all(verificationJobs);
   // for (const r of results) {

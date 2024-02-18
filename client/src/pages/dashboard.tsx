@@ -134,11 +134,14 @@ const Dropzone: FC = () => {
             file: file,
           });
 
-          await uploadToChain({
+          const res = await uploadToChain({
             fileName: file.name,
             fileType: file.type,
             s3Key: presignedResponse.key,
           });
+          console.log("res", res);
+
+          if (res.message) toast.error(res.message);
 
           queryClient.invalidateQueries({ queryKey: ["songs"] });
 
