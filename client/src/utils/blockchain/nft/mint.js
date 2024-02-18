@@ -1,7 +1,9 @@
-var fetch = require('node-fetch');
-const { crossmintAPIKey, pinataGatewayurl } = require('../secrets.json');
+import { fetch } from 'node-fetch';
+import { crossmintAPIKey, pinataGatewayurl } from '../secrets.json';
 
-async function mintNFT(recipientEmail, audio_name, ipfshash) {
+export async function mintNFT(recipientEmail, audio_name) {
+  const ipfshash = 'QmTGBQwFc1SdYvKD53eMqdMVGsRtTqS1kmRCvQDQY7n8Mv';
+
   const apiKey = crossmintAPIKey;
   const chain = 'polygon';
   const env = 'www';
@@ -24,9 +26,9 @@ async function mintNFT(recipientEmail, audio_name, ipfshash) {
       metadata: {
         name: audio_name,
         image,
-        animation_url:
-          'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_100KB_MP3.mp3',
-        description: 'My first NFT using Crossmint',
+        // animation_url:
+        //   'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_100KB_MP3.mp3',
+        description: 'Owns ' + audio_name + '. Verified by Sonoverse.',
       },
     }),
   };
@@ -37,8 +39,8 @@ async function mintNFT(recipientEmail, audio_name, ipfshash) {
     .catch((err) => console.error('error:' + err));
 }
 
-mintNFT(
-  'jadhavameyak@gmail.com',
-  'Part 1.m4a',
-  'QmTGBQwFc1SdYvKD53eMqdMVGsRtTqS1kmRCvQDQY7n8Mv'
-);
+// mintNFT(
+//   'hello@gmail.com',
+//   'Part 1.m4a',
+//   'QmTGBQwFc1SdYvKD53eMqdMVGsRtTqS1kmRCvQDQY7n8Mv'
+// );

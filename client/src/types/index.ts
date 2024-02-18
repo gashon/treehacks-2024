@@ -31,6 +31,10 @@ export type DMCAClaimRequest = {
   audio_link: string;
 };
 
+export type MintPostRequest = {
+  file_name: string;
+};
+
 export type EmailTemplate = {
   from: string;
   subject: string;
