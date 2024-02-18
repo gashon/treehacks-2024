@@ -52,12 +52,12 @@ async function getContractData(contractAddress) {
 
   const data = await contract.get();
 
-  console.log({ userId: data[0], createdAt: data[1] });
+  // console.log({ userId: data[0], createdAt: data[1] });
 
   return { userId: data[0], createdAt: data[1] };
 }
 
 // TODO REMOVE
-getContractData('0x02a6647357527b982C9234DcC7ceca9aB1F735fD').catch(
-  console.error
-);
+// getContractData('0x02a6647357527b982C9234DcC7ceca9aB1F735fD').catch(
+//   console.error
+// );
