@@ -33,6 +33,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 
 const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   const steps = [
     'Opening media file',
@@ -51,21 +52,24 @@ const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       return;
     }
 
+    if (!isAnimating) setIsAnimating(true);
+
     if (currentStepIndex < steps.length) {
       const timer = setTimeout(() => {
+        if (currentStepIndex + 1 > steps.length) setIsAnimating(false);
         setCurrentStepIndex(currentStepIndex + 1);
       }, 2000);
 
       return () => clearTimeout(timer);
     }
-  }, [isOpen, currentStepIndex, steps.length]);
+  }, [isOpen, currentStepIndex, steps.length, setIsAnimating, isAnimating]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isAnimating) return null;
 
   return (
-    <div className='bg-black bg-opacity-60 fixed flex inset-0 items-center justify-center z-50'>
-      <div className='bg-white max-w-2xl md:p-12 mx-4 p-8 rounded-lg shadow-xl w-full'>
-        <div className='flex justify-center'>
+    <div className="bg-black text-black bg-opacity-60 fixed flex inset-0 items-center justify-center z-50">
+      <div className="bg-white max-w-2xl md:p-12 mx-4 p-8 rounded-lg shadow-xl w-full">
+        <div className="flex justify-center">
           {/* Inline style for the spinner animation */}
           <div className='animate-spin border-b-2 border-blue-500 h-8 rounded-full w-8'></div>
         </div>
@@ -127,11 +131,10 @@ const Dropzone: FC = () => {
 
           queryClient.invalidateQueries({ queryKey: ['songs'] });
 
-          console.log('uploaded');
+          setIsUploading(false); // TODO fix
+          console.log("uploaded");
         }
       });
-
-      setIsUploading(false); // TODO fix
     },
     [getPresignedUrl, uploadFileMutation]
   );
@@ -355,10 +358,10 @@ export default function Home() {
     <main className='800 flex justify-center min-h-screen mt-10 w-full'>
       <Toaster />
 
-      <div className='lg:w-3/4 w-11/12'>
+      <div className="lg:w-3/4 w-11/12">
         <Banner />
         <Dropzone />
-        <div className='mt-10'>
+        <div className="mt-10">
           <SongsList />
         </div>
       </div>
