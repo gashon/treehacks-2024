@@ -8,6 +8,8 @@ import { deployContract } from "@/utils/blockchain/scripts/new_contract_deploy";
 import { db } from "@/db";
 import { verifyOriginal } from "@/util/verify-original";
 
+const SIMILARITY_THRESHOLD = 0.8;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -40,10 +42,16 @@ export default async function handler(
     });
   });
 
-  const results = await Promise.all(verificationJobs);
-  for (const res of results) {
-    console.log("res", res);
-  }
+  // const results = await Promise.all(verificationJobs);
+  // for (const r of results) {
+  //   // console.log("res", r);
+  //   if (r.similarity_mod > SIMILARITY_THRESHOLD) {
+  //     res.json({
+  //       message: "[Collision] This song is already protected",
+  //     });
+  //     return;
+  //   }
+  // }
 
   const chainAddress = await deployContract(
     token.user_id,
