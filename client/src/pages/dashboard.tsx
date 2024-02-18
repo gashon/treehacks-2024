@@ -3,6 +3,7 @@ import { useCallback, useState, useRef, FC, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { AiOutlineSound } from "react-icons/ai";
 import { Toaster, toast } from "sonner";
+import { useGetStrikes } from "@/features/song";
 // import { WaveSurfer } from "wavesurfer-react";
 
 import { queryClient } from "@/lib/react-query";
@@ -158,8 +159,6 @@ const Dropzone: FC = () => {
           if (!res.message)
             queryClient.invalidateQueries({ queryKey: ["songs"] });
 
-          console.log(file.name);
-
           await mintNewNFT({
             fileName: file.name,
           });
@@ -244,6 +243,7 @@ const SongsList: FC = () => {
   const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined);
   const [audio, setAudio] = useState<Audio | undefined>(undefined);
   const visualizerRef = useRef<HTMLCanvasElement>(null);
+  const { data: strikes } = useGetStrikes();
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
@@ -288,7 +288,7 @@ const SongsList: FC = () => {
             Copyright Infringements
           </h2>
           <ul className="flex flex-col gap-2">
-            {YOUTUBE_LINKS.map((link, i) => (
+            {(strikes?.data ?? []).map((link, i) => (
               <li
                 key={`link:${i}`}
                 className="flex flex-row items-center justify-between mb-2"
