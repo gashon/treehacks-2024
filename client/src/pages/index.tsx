@@ -105,7 +105,7 @@ export default function Home() {
           Caldera. <br />
           <br />
           We use our own <strong>custom LSTM deep learning model</strong> to
-          detect proactively detect parodies and fraudulent remixes.
+          proactively detect parodies and fraudulent remixes.
         </p>
       </Modal>
     </>
