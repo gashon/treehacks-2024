@@ -9,5 +9,5 @@ export const YOUTUBE_LINKS = [
   "https://www.youtube.com/watch?v=SqJGCnfr7rc&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D",
 ];
 
-export const COLLIDING_PARODY = "";
-export const COLLIDING_ALTERATION = "";
+export const COLLIDING_PARODY = "happy_parody.mp3";
+export const COLLIDING_ALTERATION = "happy_speed_up.mp3";

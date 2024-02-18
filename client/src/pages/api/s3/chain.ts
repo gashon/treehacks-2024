@@ -42,6 +42,8 @@ export default async function handler(
     });
   });
 
+  console.log("file", file_name);
+
   if (file_name === COLLIDING_PARODY) {
     res.json({
       message: '[Failed] 82.4% chance of colliding parody',

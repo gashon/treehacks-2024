@@ -1,13 +1,13 @@
-import dynamic from 'next/dynamic';
-import { useCallback, useState, useRef, FC, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { AiOutlineSound } from 'react-icons/ai';
-import { Toaster, toast } from 'sonner';
+import dynamic from "next/dynamic";
+import { useCallback, useState, useRef, FC, useEffect } from "react";
+import { useDropzone } from "react-dropzone";
+import { AiOutlineSound } from "react-icons/ai";
+import { Toaster, toast } from "sonner";
 // import { WaveSurfer } from "wavesurfer-react";
 
-import { queryClient } from '@/lib/react-query';
+import { queryClient } from "@/lib/react-query";
 
-import { YOUTUBE_LINKS } from '@/consts';
+import { YOUTUBE_LINKS } from "@/consts";
 import {
   useUploadFile,
   getPresignedUrl,
@@ -15,9 +15,9 @@ import {
   uploadToChain,
   submitDMCAClaim,
   mintNewNFT,
-} from '@/features/song';
+} from "@/features/song";
 
-const PerlinSketchNoSSR = dynamic(() => import('@/components/perlin'), {
+const PerlinSketchNoSSR = dynamic(() => import("@/components/perlin"), {
   ssr: false,
 });
 
@@ -26,20 +26,19 @@ const Modal = ({ isOpen, onClose, children }) => {
 
   return (
     // Increased z-index for modal overlay to ensure it's above everything
-    <div className='bg-black bg-opacity-50 fixed flex inset-0 items-center justify-center z-50'>
+    <div className="bg-black bg-opacity-50 fixed flex inset-0 items-center justify-center z-50">
       <div
-        className='bg-white p-8 rounded-lg'
+        className="bg-white p-8 rounded-lg"
         style={{
-          width: '80%',
-          height: 'auto',
-          maxWidth: '1100px',
+          width: "80%",
+          height: "auto",
+          maxWidth: "1100px",
           zIndex: 60,
-        }}>
+        }}
+      >
         {/* Adjusted size */}
-        <div className='flex justify-end w-full'>
-          <button
-            className='text-black'
-            onClick={onClose}>
+        <div className="flex justify-end w-full">
+          <button className="text-black" onClick={onClose}>
             X
           </button>
         </div>
@@ -49,19 +48,22 @@ const Modal = ({ isOpen, onClose, children }) => {
   );
 };
 
-const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
+const UploadingModal: React.FC<{ isOpen: boolean; errorMessage?: string }> = ({
+  isOpen,
+  errorMessage,
+}) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   const steps = [
-    'Opening media file',
-    'Verifying originality with Sonoverse ML',
-    'Generating presigned URL',
-    'Uploading file to storage',
-    'Uploading file to IPFS',
-    'Hashing file',
-    'Deploying chain contract',
-    'All complete',
+    "Opening media file",
+    "Verifying originality with Sonoverse ML",
+    "Generating presigned URL",
+    "Uploading file to storage",
+    "Uploading file to IPFS",
+    "Hashing file",
+    "Deploying chain contract",
+    "All complete",
   ];
 
   useEffect(() => {
@@ -78,6 +80,8 @@ const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 
       return () => clearTimeout(timer);
     } else {
+      if (errorMessage) toast.error(errorMessage);
+
       setIsAnimating(false);
       setCurrentStepIndex(0);
     }
@@ -86,29 +90,28 @@ const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   if (!isOpen && !isAnimating) return null;
 
   return (
-    <div className='bg-black bg-opacity-60 fixed flex inset-0 items-center justify-center text-black z-50'>
-      <div className='bg-white max-w-2xl md:p-12 mx-4 p-8 rounded-lg shadow-xl w-full'>
-        <div className='flex justify-center'>
+    <div className="bg-black fixed flex inset-0 items-center justify-center text-black z-50">
+      <div className="bg-white max-w-2xl md:p-12 mx-4 p-8 rounded-lg shadow-xl w-full">
+        <div className="flex justify-center">
           {/* Inline style for the spinner animation */}
-          <div className='animate-spin border-b-2 border-blue-500 h-8 rounded-full w-8'></div>
+          <div className="animate-spin border-b-2 border-blue-500 h-8 rounded-full w-8"></div>
         </div>
-        <h2 className='font-semibold md:text-2xl mt-4 text-center text-xl'>
+        <h2 className="font-semibold md:text-2xl mt-4 text-center text-xl">
           Uploading...
         </h2>
-        <ul className='list-none mt-6 space-y-2'>
+        <ul className="list-none mt-6 space-y-2">
           {steps.slice(0, currentStepIndex).map((step, index) => (
-            <li
-              key={index}
-              className='flex items-center md:text-lg text-base'>
+            <li key={index} className="flex items-center md:text-lg text-base">
               <svg
-                className='h-6 mr-2 text-blue-500 w-6'
-                fill='none'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                viewBox='0 0 24 24'
-                stroke='currentColor'>
-                <path d='M5 13l4 4L19 7'></path>
+                className="h-6 mr-2 text-blue-500 w-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d="M5 13l4 4L19 7"></path>
               </svg>
               {step}
             </li>
@@ -120,13 +123,16 @@ const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 };
 
 const Dropzone: FC = () => {
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState<{
+    open: boolean;
+    error?: string;
+  }>({ open: false, error: undefined });
   const uploadFileMutation = useUploadFile();
 
   const onDrop = useCallback(
     // TODO add notifications/loading indicator
     async (acceptedFiles) => {
-      setIsUploading(false); // TODO fix
+      setIsUploading({ open: true });
 
       acceptedFiles.forEach(async (file: File) => {
         // Get presigned URL for each file
@@ -147,58 +153,52 @@ const Dropzone: FC = () => {
             fileType: file.type,
             s3Key: presignedResponse.key,
           });
-          console.log('res', res);
 
-          if (res.message) toast.error(res.message);
+          if (!res.message)
+            queryClient.invalidateQueries({ queryKey: ["songs"] });
 
           await mintNewNFT({
             file_name: file.name,
           });
 
-          queryClient.invalidateQueries({ queryKey: ['songs'] });
+          queryClient.invalidateQueries({ queryKey: ["songs"] });
 
-          setIsUploading(false); // TODO fix
-          console.log('uploaded');
+          setIsUploading({ open: false, error: res?.message ?? undefined });
         }
       });
     },
-    [getPresignedUrl, uploadFileMutation]
+    [getPresignedUrl, uploadFileMutation],
   );
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      'audio/*': ['.mp3', '.wav', '.aac'],
+      "audio/*": [".mp3", ".wav", ".aac"],
     },
   });
 
-  const files = acceptedFiles.map((file: File) => (
-    <li key={file.name}>
-      {file.name} - {file.size} bytes
-    </li>
-  ));
-
   return (
     <section
-      className='container mx-auto w-full'
-      style={{
-        opacity: 0.85,
-      }}>
-      <UploadingModal isOpen={isUploading} />
+      className="container mx-auto w-full"
+      style={
+        {
+          // opacity: 0.85,
+        }
+      }
+    >
+      <UploadingModal
+        isOpen={isUploading.open}
+        errorMessage={isUploading.message}
+      />
       <div
         {...getRootProps({
           className:
-            'bg-zinc-900 hover:bg-zinc-800 w-full flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-md cursor-pointer ',
-        })}>
+            "bg-zinc-900 hover:bg-zinc-800 w-full flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-md cursor-pointer ",
+        })}
+      >
         <input {...getInputProps()} />
         <p>Click to upload your music</p>
       </div>
-      {files?.length > 0 && (
-        <aside className='mt-4'>
-          <h4 className='font-semibold text-lg'>Files</h4>
-          <ul>{files}</ul>
-        </aside>
-      )}
     </section>
   );
 };
@@ -213,20 +213,21 @@ const AudioVisualizer: FC<{ url: string }> = ({ url }) => {
   return (
     <WaveSurfer
       url={url}
-      options={{ waveColor: 'violet', progressColor: 'purple' }}
+      options={{ waveColor: "violet", progressColor: "purple" }}
     />
   );
 };
 
 const CopyrightLink: FC<{ rank: number; url: string }> = ({ rank, url }) => {
   return (
-    <div className='flex gap-4 items-center justify-between w-full'>
-      <div className='flex flex-row gap-1'>
-        <p className='text-black'>{rank}.</p>
+    <div className="flex gap-4 items-center justify-between w-full">
+      <div className="flex flex-row gap-1">
+        <p className="text-black">{rank}.</p>
         <a
-          className='break-all hover:underline text-blue-600'
-          target='_blank'
-          href={url}>
+          className="break-all hover:underline text-blue-600"
+          target="_blank"
+          href={url}
+        >
           {url}
         </a>
       </div>
@@ -259,7 +260,7 @@ const SongsList: FC = () => {
   const playAudio = async (song) => {
     try {
       const url = new URL(
-        `https://treehacks-2024.s3.us-west-1.amazonaws.com/${song.s3Key}`
+        `https://treehacks-2024.s3.us-west-1.amazonaws.com/${song.s3Key}`,
       );
       setAudioUrl(url);
 
@@ -268,7 +269,7 @@ const SongsList: FC = () => {
 
       setAudio(audio);
     } catch (error) {
-      console.error('Error playing the song', error);
+      console.error("Error playing the song", error);
     }
   };
 
@@ -277,48 +278,44 @@ const SongsList: FC = () => {
   };
 
   return (
-    <section className='flex flex-col gap-2'>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}>
+    <section className="flex flex-col gap-2">
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <>
-          <h2 className='font-bold mb-4 text-black text-xl'>
+          <h2 className="font-bold mb-4 text-black text-xl">
             Copyright Infringements
           </h2>
-          <ul className='flex flex-col gap-2'>
+          <ul className="flex flex-col gap-2">
             {YOUTUBE_LINKS.map((link, i) => (
               <li
                 key={`link:${i}`}
-                className='flex flex-row items-center justify-between mb-2'>
-                <CopyrightLink
-                  url={link}
-                  rank={i + 1}
-                />
+                className="flex flex-row items-center justify-between mb-2"
+              >
+                <CopyrightLink url={link} rank={i + 1} />
               </li>
             ))}
           </ul>
         </>
       </Modal>
-      <p className='text-xl'>Your Songs</p>
-      <ul className='flex flex-col gap-10'>
+      <p className="text-xl">Your Songs</p>
+      <ul className="flex flex-col gap-10">
         {data.data.songs.map((song, index) => {
           const isFirst = index === data.data.songs.length - 1;
           return (
             <li
               key={`song:${song.id}`}
-              className='flex flex-row items-center justify-between'>
+              className="flex flex-row items-center justify-between"
+            >
               {isFirst ? (
                 <a
-                  className='cursor-pointer hover:underline text-blue-600 text-lg'
-                  onClick={() => handleNotificationsOpen()}>
+                  className="cursor-pointer hover:underline text-blue-600 text-lg"
+                  onClick={() => handleNotificationsOpen()}
+                >
                   {song.fileName}
                 </a>
               ) : (
-                <p className='text-lg'>{song.fileName}</p>
+                <p className="text-lg">{song.fileName}</p>
               )}
-              <div
-                className='cursor-pointer'
-                onClick={() => playAudio(song)}>
+              <div className="cursor-pointer" onClick={() => playAudio(song)}>
                 <AiOutlineSound />
               </div>
             </li>
@@ -330,8 +327,8 @@ const SongsList: FC = () => {
 };
 
 const Banner: FC = () => (
-  <header className='mb-10'>
-    <h1 className='text-3xl'>Sonoverse</h1>
+  <header className="mb-10">
+    <h1 className="text-3xl">Sonoverse</h1>
   </header>
 );
 
@@ -340,14 +337,14 @@ const SubmitClaimButton: FC = () => {
 
   const handleClick = () => {
     setIsDisabled(true);
-    const dmcaSubmissionToast = toast('Submitting DMCA claim...');
+    const dmcaSubmissionToast = toast("Submitting DMCA claim...");
 
-    toast.loading('Submitting DMCA claim... ', {
+    toast.loading("Submitting DMCA claim... ", {
       id: dmcaSubmissionToast,
     });
 
     setTimeout(() => {
-      toast.success('Submitted DMCA claim', {
+      toast.success("Submitted DMCA claim", {
         id: dmcaSubmissionToast,
       });
     }, 1500);
@@ -355,12 +352,13 @@ const SubmitClaimButton: FC = () => {
 
   return (
     <button
-      id='submitClaimBtn'
+      id="submitClaimBtn"
       disabled={isDisabled}
       onClick={handleClick}
       className={`bg-blue-900 rounded opacity-75 text-white border-bottom-1 border-black px-3 py-1 text-black ${
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-zinc-800'
-      }`}>
+        isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-zinc-800"
+      }`}
+    >
       Submit Claim
     </button>
   );
@@ -370,20 +368,21 @@ export default function Home() {
   return (
     <>
       <div
-        className='absolute inset-0'
+        className="absolute inset-0"
         style={{
           zIndex: -100,
           opacity: 0.25,
-        }}>
+        }}
+      >
         <PerlinSketchNoSSR />
       </div>
-      <main className='800 flex justify-center min-h-screen mt-10 w-full'>
+      <main className="800 flex justify-center min-h-screen mt-10 w-full">
         <Toaster />
 
-        <div className='lg:w-3/4 w-11/12'>
+        <div className="lg:w-3/4 w-11/12">
           <Banner />
           <Dropzone />
-          <div className='mt-10'>
+          <div className="mt-10">
             <SongsList />
           </div>
         </div>
