@@ -60,8 +60,7 @@ const UploadingModal: React.FC<{ isOpen: boolean; errorMessage?: string }> = ({
     'Opening media file',
     'Verifying originality with Sonoverse ML',
     'Generating presigned URL',
-    'Uploading file to storage',
-    'Uploading file to IPFS',
+    'Uploading file to storage and IPFS',
     'Hashing file',
     'Deploying chain contract',
     'All complete',
@@ -387,7 +386,7 @@ export default function Home() {
         <div className='lg:w-3/4 w-11/12'>
           <Banner />
           <Dropzone />
-          <div className='mt-10'>
+          <div className="mt-10">
             <SongsList />
           </div>
         </div>
