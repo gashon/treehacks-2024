@@ -54,10 +54,7 @@ class ParodyLSTM(nn.Module):
         output2, (hidden2, cell2) = self.lstm2(input2)
         pooled1 = torch.mean(output1, dim=0)
         pooled2 = torch.mean(output2, dim=0)
-    
-        
-        
-        
+           
         # Combine the outputs of the two LSTMs
         combined = torch.cat((pooled1, pooled2), dim=1)
         
@@ -86,11 +83,13 @@ def add_data(file1, file2, match, training_data):
 def train():
 
     training_data = []
+    print(2)
     add_data('original.txt', 'parody.txt', 1, training_data)
     add_data('og_false.txt', 'parody_false.txt', 0, training_data)
 
     for epoch in range(300):  # again, normally you would NOT do 300 epochs, it is toy data
         for i in range(len(training_data)):
+            print(epoch)
             og, parody, match = training_data[i]
             # Step 1. Remember that Pytorch accumulates gradients.
             # We need to clear them out before each instance
@@ -107,11 +106,11 @@ def train():
             optimizer.step()
     torch.save(model, 'model.pth')
 
-#train()
+
 
 def predict(lyrics1, lyrics2):
     with torch.no_grad():
-        model = torch.load('model.pth')
+        model = torch.load('ml/model.pth')
         model.eval()  # Set the model to evaluation mode
         og_embed = embed_lyrics(lyrics1)
         parody_embed = embed_lyrics(lyrics2)
@@ -126,7 +125,4 @@ def test_lyrics(path1, path2):
 
 
 
-test_lyrics('parody.txt', 'original.txt')
-
-
-    
+# test_lyrics('parody.txt', 'original.txt')

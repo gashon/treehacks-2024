@@ -2,6 +2,9 @@ import librosa
 import numpy as np
 from scipy.spatial.distance import euclidean, cosine
 import eyed3
+import requests
+from parody_match import embed_lyrics
+
 
 
 
@@ -18,7 +21,7 @@ def extract_lyrics(file_path):
         return "Lyrics not found."
 
 
-def load_audio_features(file_path):
+def load_audio_features(file_path, lyrics):
     """Load audio file and extract features."""
     y, sr = librosa.load(file_path, sr=None)
     
@@ -33,21 +36,25 @@ def load_audio_features(file_path):
    
     mean_chroma = np.mean(chroma, axis=1)
     mean_tempogram = np.mean(tempogram, axis=1)
-    
-    return mean_mfccs, mean_chroma, mean_tempogram
+
+    return mean_mfccs, mean_chroma, mean_tempogram, np.array([np.mean(embed_lyrics(lyrics))])
 
 def compare_features(feat1, feat2):
     """Compare two sets of features using cosine similarity."""
     return 1 - cosine(feat1, feat2)
 
 def final_similarity(feat1, feat2):
-    average_similarity = sum(compare_features(feat1[i], feat2[i]) for i in range(3)) / 3
-    return average_similarity 
+    # do element wise dot product sum instead of doing a single one for the mean
+    for i in range(4):
+        try:
 
-# # Load features for two audio files
-features1 = load_audio_features(DEMO_PATH1)
-features2 = load_audio_features(DEMO_PATH2)
+            compare_features(feat1[i], feat2[i])
+        except:
+            print(i)
+            print(feat1[i], feat2[i])
 
-# Compare each feature set
-print(final_similarity(features1, features2))
+    average_similarity = sum(compare_features(feat1[i], feat2[i]) for i in range(4)) / 4
+    
+    return average_similarity - (1 - average_similarity) * 3.5
+
 
