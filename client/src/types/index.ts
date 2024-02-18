@@ -1,4 +1,4 @@
-import { Song } from '@/db/types';
+import { Song } from "@/db/types";
 
 export type AuthToken = {
   email: string;
@@ -62,5 +62,8 @@ export type PutChainResponse = Response<{
 }>;
 
 export type SongsGetResponse = Response<{
-  songs: Pick<Song, 's3Key' | 'chainAddress' | 'id' | 'fileName'>[];
+  songs: Pick<
+    Song,
+    "s3Key" | "chainAddress" | "id" | "fileName" | "createdAt"
+  >[];
 }>;

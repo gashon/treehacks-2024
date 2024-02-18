@@ -300,7 +300,7 @@ const SongsList: FC = () => {
         </>
       </Modal>
       <p className="text-xl">Your Songs</p>
-      <ul className="flex flex-col gap-15">
+      <ul className="flex flex-col gap-10">
         {data.data.songs.map((song, index) => {
           const isFirst = index === data.data.songs.length - 1;
           return (
@@ -309,6 +309,7 @@ const SongsList: FC = () => {
               className="flex flex-row items-center justify-between"
             >
               <div className="flex flex-col">
+                <p>{new Date(song.createdAt).toISOString()}</p>
                 {isFirst ? (
                   <a
                     className="cursor-pointer hover:underline text-blue-600 text-lg"
@@ -319,9 +320,6 @@ const SongsList: FC = () => {
                 ) : (
                   <p className="text-lg">{song.fileName}</p>
                 )}
-                <p className="opacity-50">
-                  {new Date(song.createdAt).toISOString()}
-                </p>
               </div>
               <div className="cursor-pointer" onClick={() => playAudio(song)}>
                 <AiOutlineSound />
