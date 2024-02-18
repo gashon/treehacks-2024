@@ -11,12 +11,81 @@ import {
   uploadToChain,
 } from '@/features/song';
 
+const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  // Hardcoded list of completion steps
+  const steps = [
+    'Opening media file',
+    'Verifying originality with Sonoverse ML',
+    'Generating presigned URL',
+    'Uploading file to storage',
+    'Uploading file to IPFS',
+    'Hashing file',
+    'Deploying chain contract',
+    'All complete',
+  ];
+
+  useEffect(() => {
+    if (!isOpen) {
+      setCurrentStepIndex(0);
+      return;
+    }
+
+    if (currentStepIndex < steps.length) {
+      const timer = setTimeout(() => {
+        setCurrentStepIndex(currentStepIndex + 1);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, currentStepIndex, steps.length]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className='bg-black bg-opacity-60 fixed flex inset-0 items-center justify-center z-50'>
+      <div className='bg-white max-w-2xl md:p-12 mx-4 p-8 rounded-lg shadow-xl w-full'>
+        <div className='flex justify-center'>
+          {/* Inline style for the spinner animation */}
+          <div className='animate-spin border-b-2 border-blue-500 h-8 rounded-full w-8'></div>
+        </div>
+        <h2 className='font-semibold md:text-2xl mt-4 text-center text-xl'>
+          Uploading...
+        </h2>
+        <ul className='list-none mt-6 space-y-2'>
+          {steps.slice(0, currentStepIndex).map((step, index) => (
+            <li
+              key={index}
+              className='flex items-center md:text-lg text-base'>
+              <svg
+                className='h-6 mr-2 text-blue-500 w-6'
+                fill='none'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+                stroke='currentColor'>
+                <path d='M5 13l4 4L19 7'></path>
+              </svg>
+              {step}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
 const Dropzone: FC = () => {
+  const [isUploading, setIsUploading] = useState(false);
   const uploadFileMutation = useUploadFile();
 
   const onDrop = useCallback(
     // TODO add notifications/loading indicator
     async (acceptedFiles) => {
+      setIsUploading(true); // TODO fix
+
       acceptedFiles.forEach(async (file: File) => {
         // Get presigned URL for each file
         const { data: presignedResponse } = await getPresignedUrl({
@@ -42,6 +111,8 @@ const Dropzone: FC = () => {
           console.log('uploaded');
         }
       });
+
+      setIsUploading(false); // TODO fix
     },
     [getPresignedUrl, uploadFileMutation]
   );
@@ -61,6 +132,7 @@ const Dropzone: FC = () => {
 
   return (
     <section className='container mx-auto w-full'>
+      <UploadingModal isOpen={isUploading} />
       <div
         {...getRootProps({
           className:
@@ -101,7 +173,7 @@ const SongsList: FC = () => {
   const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   if (isLoading) return <p>Loading</p>;
-  if (!data.data?.songs) return <p>No songs</p>;
+  if (!data?.data?.songs) return <p>No songs</p>;
 
   useEffect(() => {
     // stop playing

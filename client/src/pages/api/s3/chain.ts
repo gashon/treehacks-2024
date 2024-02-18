@@ -6,6 +6,7 @@ import { AuthToken, ChainPostRequest } from "@/types";
 // import * as chain from "@/utils/blockchain/scripts/new_contract_deployment.js";
 import { deployContract } from "@/utils/blockchain/scripts/new_contract_deploy";
 import { db } from "@/db";
+import { verifyOriginal } from "@/util/verify-original";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,6 +28,22 @@ export default async function handler(
   }
 
   const { s3_key, file_name, file_type } = req.body as ChainPostRequest;
+  const s3Url = `https://treehacks-2024.s3.us-west-1.amazonaws.com/${s3_key}`;
+  const priorKnowledgeBase = await db.selectFrom("song").selectAll().execute();
+
+  const verificationJobs = priorKnowledgeBase.map(({ s3Key: pKey }) => {
+    const comparisonUrl = `https://treehacks-2024.s3.us-west-1.amazonaws.com/${pKey}`;
+
+    return verifyOriginal({
+      url1: s3Url,
+      url2: comparisonUrl,
+    });
+  });
+
+  const results = await Promise.all(verificationJobs);
+  for (const res of results) {
+    console.log("res", res);
+  }
 
   const chainAddress = await deployContract(
     token.user_id,

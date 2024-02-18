@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
-import { privateKey, calderaRPCUrl, calderaChainId } from "../secrets.json";
+import { ethers } from 'ethers';
+import { privateKey, calderaRPCUrl, calderaChainId } from '../secrets.json';
 // import solc from 'solc';
-import AudioContractABI from "../contracts/AudioContractABI.json";
-import { bytecode as AudioContractBytecode } from "../contracts/AudioContractBytecode.json";
+import AudioContractABI from '../contracts/AudioContractABI.json';
+import { bytecode as AudioContractBytecode } from '../contracts/AudioContractBytecode.json';
 
 // var contract = `
 //   pragma solidity >=0.7.3;
@@ -57,7 +57,7 @@ export async function deployContract(userid, createdAt) {
   const factory = new ethers.ContractFactory(
     contractABI,
     contractBytecode,
-    wallet,
+    wallet
   );
 
   const overrides = {
@@ -69,9 +69,9 @@ export async function deployContract(userid, createdAt) {
   await contract.deployed();
 
   // // TODO REMOVE
-  console.log('Your_Contract deployed to:', contract.address);
+  // console.log('Your_Contract deployed to:', contract.address);
 
   return contract.address;
 }
 
-deployContract('User1', '2022-02-22').catch(console.error);
+// deployContract('User1', '2022-02-22').catch(console.error);
