@@ -87,13 +87,10 @@ const SongsList: FC = () => {
 
   const playAudio = async (song) => {
     try {
-      const { data: presignedResponse } = await getPresignedUrl({
-        fileName: song.fileName,
-        fileType: song.fileType,
-      });
-      const audioUrl = presignedResponse.url;
-      console.log("AUDIO", audioUrl);
-      const audio = new Audio(audioUrl);
+      const url = new URL(
+        `https://treehacks-2024.s3.us-west-1.amazonaws.com/${song.s3Key}`,
+      );
+      const audio = new Audio(url);
       audio.play();
     } catch (error) {
       console.error("Error playing the song", error);
