@@ -39,6 +39,7 @@
     "react-dropzone": "^14.2.3",
     "react-icons": "^5.0.1",
     "react-p5": "^1.4.1",
+    "react-type-animation": "^3.2.0",
     "solc": "^0.7.3"
   },
   "devDependencies": {
