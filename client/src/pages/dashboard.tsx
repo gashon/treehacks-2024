@@ -82,7 +82,7 @@ const Dropzone: FC = () => {
   const onDrop = useCallback(
     // TODO add notifications/loading indicator
     async (acceptedFiles) => {
-      setIsUploading(true);
+      setIsUploading(true); // TODO fix
 
       acceptedFiles.forEach(async (file: File) => {
         // Get presigned URL for each file
@@ -110,7 +110,7 @@ const Dropzone: FC = () => {
         }
       });
 
-      setIsUploading(false);
+      setIsUploading(false); // TODO fix
     },
     [getPresignedUrl, uploadFileMutation]
   );
