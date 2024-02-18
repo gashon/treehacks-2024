@@ -1,6 +1,7 @@
-import { useCallback, FC } from "react";
+import { useCallback, useState, useRef, FC, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { AiOutlineSound } from "react-icons/ai";
+import WavesurferPlayer from "@wavesurfer/react";
 
 import { queryClient } from "@/lib/react-query";
 import {
@@ -79,19 +80,50 @@ const Dropzone: FC = () => {
   );
 };
 
+const AudioVisualizer: FC<{ url: string }> = ({ url }) => {
+  const wavesurferRef = useRef(null);
+
+  useEffect(() => {
+    if (wavesurferRef.current) {
+      wavesurferRef.current.load(url);
+    }
+  }, [url]);
+
+  return (
+    <WaveSurfer
+      ref={wavesurferRef}
+      options={{ waveColor: "violet", progressColor: "purple" }}
+    />
+  );
+};
+
 const SongsList: FC = () => {
   const { data, isLoading } = useGetSongs();
+  const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined);
+  const [audio, setAudio] = useState<Audio | undefined>(undefined);
+  const [wavesurfer, setWavesurfer] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   if (isLoading) return <p>Loading</p>;
   if (!data.data?.songs) return <p>No songs</p>;
+
+  const onReady = (ws) => {
+    setWavesurfer(ws);
+    setIsPlaying(false);
+  };
+
+  const onPlayPause = () => {
+    wavesurfer && wavesurfer.playPause();
+  };
 
   const playAudio = async (song) => {
     try {
       const url = new URL(
         `https://treehacks-2024.s3.us-west-1.amazonaws.com/${song.s3Key}`,
       );
-      const audio = new Audio(url);
-      audio.play();
+      setAudioUrl(url);
+      setAudio(new Audio(url));
     } catch (error) {
       console.error("Error playing the song", error);
     }
@@ -108,6 +140,16 @@ const SongsList: FC = () => {
               className="flex flex-row justify-between items-center"
             >
               <p className="text-lg">{song.fileName}</p>
+              {audioUrl && (
+                <WavesurferPlayer
+                  height={100}
+                  waveColor="violet"
+                  url={audioUrl}
+                  onReady={onReady}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                />
+              )}
               <div className="cursor-pointer" onClick={() => playAudio(song)}>
                 <AiOutlineSound />
               </div>
