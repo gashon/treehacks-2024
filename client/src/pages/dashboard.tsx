@@ -234,7 +234,7 @@ const SongsList: FC = () => {
         <>
           <h2 className='font-bold text-xl'>Copyright Infringements</h2>
           <li
-            key={`song:${song.id}`}
+            key={`0`}
             className='flex flex-row items-center justify-between'>
             <a href='https://www.youtube.com/watch?v=R7-ApK63X_U&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D'>
               https://www.youtube.com/watch?v=R7-ApK63X_U&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D
@@ -242,7 +242,7 @@ const SongsList: FC = () => {
             <SubmitClaimButton />
           </li>
           <li
-            key={`song:${song.id}`}
+            key={`1`}
             className='flex flex-row items-center justify-between'>
             <a href='https://www.youtube.com/watch?v=dM12YTZvQGw&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D'>
               https://www.youtube.com/watch?v=dM12YTZvQGw&pp=ygUXaGFwcHkgY2xhcCBhbG9uZyBwYXJvZHk%3D
@@ -250,7 +250,7 @@ const SongsList: FC = () => {
             <SubmitClaimButton />
           </li>
           <li
-            key={`song:${song.id}`}
+            key={`2`}
             className='flex flex-row items-center justify-between'>
             <a href='https://www.youtube.com/watch?v=Go_p6oD7AIE&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
               https://www.youtube.com/watch?v=Go_p6oD7AIE&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
@@ -258,7 +258,7 @@ const SongsList: FC = () => {
             <SubmitClaimButton />
           </li>
           <li
-            key={`song:${song.id}`}
+            key={`3`}
             className='flex flex-row items-center justify-between'>
             <a href='https://www.youtube.com/watch?v=Sj0DF0rRF18&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
               https://www.youtube.com/watch?v=Sj0DF0rRF18&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
@@ -266,7 +266,7 @@ const SongsList: FC = () => {
             <SubmitClaimButton />
           </li>
           <li
-            key={`song:${song.id}`}
+            key={`4`}
             className='flex flex-row items-center justify-between'>
             <a href='https://www.youtube.com/watch?v=BbWGlDi7M7M&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
               https://www.youtube.com/watch?v=BbWGlDi7M7M&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
@@ -274,7 +274,7 @@ const SongsList: FC = () => {
             <SubmitClaimButton />
           </li>
           <li
-            key={`song:${song.id}`}
+            key={`5`}
             className='flex flex-row items-center justify-between'>
             <a href='https://www.youtube.com/watch?v=SqJGCnfr7rc&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D'>
               https://www.youtube.com/watch?v=SqJGCnfr7rc&pp=ygUWaGFwcHkgY2xhcCBhbG9uZyByZW1peA%3D%3D
