@@ -22,6 +22,7 @@ export type RegisterPostRequest = {
 export type ChainPostRequest = {
   s3_key: string;
   file_name: string;
+  file_type: string;
 };
 
 export type EmailTemplate = {
@@ -34,6 +35,7 @@ export type EmailTemplate = {
 export type S3PresignedGetRequest = {
   file_name: string;
   file_type: string;
+  readonly?: boolean;
 };
 
 type Response<T> = {

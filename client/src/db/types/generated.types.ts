@@ -10,6 +10,7 @@ export interface Song {
   chainAddress: string;
   createdAt: Generated<Timestamp>;
   fileName: string;
+  fileType: string;
   id: Generated<string>;
   s3Key: string;
   updatedAt: Generated<Timestamp>;

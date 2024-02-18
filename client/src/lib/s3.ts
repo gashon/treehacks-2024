@@ -1,4 +1,4 @@
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client } from "@/lib/aws-sdk";
 
@@ -6,6 +6,7 @@ type SongFileConfig = {
   type: "song";
   userEmail: string;
   fileName: string;
+  readonly: boolean;
 };
 
 const getKey = (config: SongFileConfig, extension: string) => {
@@ -26,16 +27,24 @@ export const getPresignedUrl = async (
 
   const key = getKey(config, extension);
 
-  const putCommand = new PutObjectCommand({
-    Bucket: process.env.S3_BUCKET_NAME,
-    Key: key,
-    ContentType: fileType,
-  });
+  let command;
+  if (!config.readonly)
+    command = new PutObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key,
+      ContentType: fileType,
+    });
+  else
+    command = new GetObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key,
+      ContentType: fileType,
+    });
 
   // @FIX TS ERROR
-  const putUrl = await getSignedUrl(s3Client, putCommand, {
+  const url = await getSignedUrl(s3Client, command, {
     expiresIn: 3600,
   });
 
-  return { putUrl, key };
+  return { url, key };
 };

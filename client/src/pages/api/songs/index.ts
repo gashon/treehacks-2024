@@ -28,7 +28,7 @@ export default async function handler(
   // TODO(@gashon) update query to insert on duplicate key
   const songs = await db
     .selectFrom("song")
-    .select(["s3Key", "id", "chainAddress", "fileName"])
+    .select(["s3Key", "id", "chainAddress", "fileName", "fileType"])
     .where("userId", "=", token.user_id)
     .execute();
 

@@ -26,7 +26,7 @@ export default async function handler(
     return;
   }
 
-  const { s3_key, file_name } = req.body as ChainPostRequest;
+  const { s3_key, file_name, file_type } = req.body as ChainPostRequest;
 
   const chainAddress = await deployContract(
     token.user_id,
@@ -40,6 +40,7 @@ export default async function handler(
       userId: token.user_id,
       chainAddress,
       fileName: file_name,
+      fileType: file_type,
     })
     .returningAll()
     .execute();
