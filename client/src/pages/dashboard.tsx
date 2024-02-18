@@ -74,9 +74,11 @@ const UploadingModal: React.FC<{ isOpen: boolean; errorMessage?: string }> = ({
 
     if (currentStepIndex < steps.length) {
       setIsAnimating(true);
+      const duration = Math.floor(Math.random() * (2500 - 1500) + 1500);
+
       const timer = setTimeout(() => {
         setCurrentStepIndex(currentStepIndex + 1);
-      }, 2000);
+      }, duration);
 
       return () => clearTimeout(timer);
     } else {
@@ -188,7 +190,7 @@ const Dropzone: FC = () => {
     >
       <UploadingModal
         isOpen={isUploading.open}
-        errorMessage={isUploading.message}
+        errorMessage={isUploading.error}
       />
       <div
         {...getRootProps({
@@ -250,7 +252,7 @@ const SongsList: FC = () => {
   if (isLoading) return <p>Loading</p>;
   if (!data?.data?.songs) return <p>No songs</p>;
 
-  // useEffect(() => {
+  // useEffect(() => isOpen{
   //   // stop playing
   //   if (audio) {
   //     audio.play();
