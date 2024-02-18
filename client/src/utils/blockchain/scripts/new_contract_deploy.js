@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { privateKey, calderaRPCUrl, calderaChainId } from '../secrets.json';
-import solc from 'solc';
+// import solc from 'solc';
 
 import AudioContractABI from '../contracts/AudioContractABI.json';
 import { bytecode as AudioContractBytecode } from '../contracts/AudioContractBytecode.json';
@@ -62,18 +62,15 @@ export async function deployContract(userid, createdAt) {
   );
 
   const overrides = {
-    gasLimit: 1000000, // Example gas limit; adjust this value based on your needs
+    gasLimit: 1000000,
   };
 
   const contract = await factory.deploy(userid, createdAt, overrides);
 
   await contract.deployed();
 
-  // TODO REMOVE
-  console.log('Your_Contract deployed to:', contract.address);
+  // // TODO REMOVE
+  // console.log('Your_Contract deployed to:', contract.address);
 
   return contract.address;
 }
-
-// TODO REMOVE
-deployContract('FAKE USER', 'CREATED NOW');
