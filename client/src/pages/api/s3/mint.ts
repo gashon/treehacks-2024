@@ -27,4 +27,6 @@ export default async function handler(
   const { file_name } = req.body as MintPostRequest;
 
   await mintNFT(token.email, file_name);
+
+  res.status(200).json({ message: 'Minted' });
 }

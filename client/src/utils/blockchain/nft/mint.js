@@ -1,4 +1,4 @@
-import { fetch } from 'node-fetch';
+import fetch from 'node-fetch';
 import { crossmintAPIKey, pinataGatewayurl } from '../secrets.json';
 
 export async function mintNFT(recipientEmail, audio_name) {
