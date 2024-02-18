@@ -1,7 +1,9 @@
-import { useCallback, useState, useRef, FC, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { AiOutlineSound } from 'react-icons/ai';
-import { Toaster, toast } from 'sonner';
+
+import dynamic from "next/dynamic";
+import { useCallback, useState, useRef, FC, useEffect } from "react";
+import { useDropzone } from "react-dropzone";
+import { AiOutlineSound } from "react-icons/ai";
+import { Toaster, toast } from "sonner";
 // import { WaveSurfer } from "wavesurfer-react";
 
 import { queryClient } from '@/lib/react-query';
@@ -12,6 +14,10 @@ import {
   uploadToChain,
   submitDMCAClaim,
 } from '@/features/song';
+
+const PerlinSketchNoSSR = dynamic(() => import("@/components/perlin"), {
+  ssr: false,
+});
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -154,7 +160,12 @@ const Dropzone: FC = () => {
   ));
 
   return (
-    <section className='container mx-auto w-full'>
+    <section
+      className="container mx-auto w-full"
+      style={{
+        opacity: 0.85,
+      }}
+    >
       <UploadingModal isOpen={isUploading} />
       <div
         {...getRootProps({
@@ -367,8 +378,9 @@ const SubmitClaimButton: FC = () => {
       disabled={isDisabled}
       onClick={handleClick}
       className={`bg-yellow-400 border-1 border-black font-bold px-3 py-1 rounded-full text-black ${
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-500'
-      }`}>
+        isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-500"
+      }`}
+    >
       Submit Claim
     </button>
   );
@@ -376,16 +388,27 @@ const SubmitClaimButton: FC = () => {
 
 export default function Home() {
   return (
-    <main className='800 flex justify-center min-h-screen mt-10 w-full'>
-      <Toaster />
-
-      <div className='lg:w-3/4 w-11/12'>
-        <Banner />
-        <Dropzone />
-        <div className='mt-10'>
-          <SongsList />
-        </div>
+    <>
+      <div
+        className="absolute inset-0 "
+        style={{
+          zIndex: -100,
+          opacity: 0.25,
+        }}
+      >
+        <PerlinSketchNoSSR />
       </div>
-    </main>
+      <main className="800 flex justify-center min-h-screen mt-10 w-full">
+        <Toaster />
+
+        <div className="lg:w-3/4 w-11/12">
+          <Banner />
+          <Dropzone />
+          <div className="mt-10">
+            <SongsList />
+          </div>
+        </div>
+      </main>
+    </>
   );
 }
