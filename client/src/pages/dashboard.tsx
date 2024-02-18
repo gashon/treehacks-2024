@@ -52,9 +52,9 @@ const UploadingModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       return;
     }
 
-    if (!isAnimating) setIsAnimating(true);
 
     if (currentStepIndex < steps.length) {
+      setIsAnimating(true)
       const timer = setTimeout(() => {
         if (currentStepIndex + 1 > steps.length) setIsAnimating(false);
         setCurrentStepIndex(currentStepIndex + 1);
@@ -118,19 +118,19 @@ const Dropzone: FC = () => {
 
         if (presignedResponse.url) {
           // Upload file to the presigned URL
-          uploadFileMutation.mutate({
-            signedUrl: presignedResponse.url,
-            file: file,
-          });
-
-          await uploadToChain({
-            fileName: file.name,
-            fileType: file.type,
-            s3Key: presignedResponse.key,
-          });
-
-          queryClient.invalidateQueries({ queryKey: ['songs'] });
-
+          // uploadFileMutation.mutate({
+          //   signedUrl: presignedResponse.url,
+          //   file: file,
+          // });
+          //
+          // await uploadToChain({
+          //   fileName: file.name,
+          //   fileType: file.type,
+          //   s3Key: presignedResponse.key,
+          // });
+          //
+          // queryClient.invalidateQueries({ queryKey: ['songs'] });
+          //
           setIsUploading(false); // TODO fix
           console.log('uploaded');
         }
@@ -334,7 +334,7 @@ const SubmitClaimButton: FC = () => {
     });
 
     setTimeout(() => {
-      toast.success('Submitted DMCA claim', {
+      toast.success("Submitted DMCA claim", {
         id: dmcaSubmissionToast,
       });
     }, 1500);
@@ -342,7 +342,7 @@ const SubmitClaimButton: FC = () => {
 
   return (
     <button
-      id='submitClaimBtn'
+      id="submitClaimBtn"
       disabled={isDisabled}
       onClick={handleClick}
       className={`bg-yellow-400 border-1 border-black font-bold px-3 py-1 rounded-full text-black ${
