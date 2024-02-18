@@ -3,15 +3,7 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const BoidsSketchNoSSR = dynamic(() => import("@/components/boids"), {
-  ssr: false,
-});
-
 const PerlinSketchNoSSR = dynamic(() => import("@/components/perlin"), {
-  ssr: false,
-});
-
-const TypewriterSketchNoSSR = dynamic(() => import("@/components/typewriter"), {
   ssr: false,
 });
 
