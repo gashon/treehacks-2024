@@ -30,7 +30,7 @@ export default async function handler(
 
   const chainAddress = await deployContract(
     token.user_id,
-    new Date().getTime(),
+    new Date().toISOString(),
   );
 
   const song = await db
