@@ -69,7 +69,9 @@ export async function deployContract(userid, createdAt) {
   await contract.deployed();
 
   // // TODO REMOVE
-  // console.log('Your_Contract deployed to:', contract.address);
+  console.log('Your_Contract deployed to:', contract.address);
 
   return contract.address;
 }
+
+deployContract('User1', '2022-02-22').catch(console.error);

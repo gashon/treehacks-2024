@@ -1,7 +1,7 @@
 import { useCallback, useState, useRef, FC, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { AiOutlineSound } from "react-icons/ai";
-import WavesurferPlayer from "@wavesurfer/react";
+import WaveSurfer from "wavesurfer.js";
 
 import { queryClient } from "@/lib/react-query";
 import {
@@ -101,21 +101,17 @@ const SongsList: FC = () => {
   const { data, isLoading } = useGetSongs();
   const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined);
   const [audio, setAudio] = useState<Audio | undefined>(undefined);
-  const [wavesurfer, setWavesurfer] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const visualizerRef = useRef<HTMLCanvasElement>(null);
 
   if (isLoading) return <p>Loading</p>;
   if (!data.data?.songs) return <p>No songs</p>;
 
-  const onReady = (ws) => {
-    setWavesurfer(ws);
-    setIsPlaying(false);
-  };
-
-  const onPlayPause = () => {
-    wavesurfer && wavesurfer.playPause();
-  };
+  useEffect(() => {
+    // stop playing
+    if (audio) {
+      audio.play();
+    }
+  }, [audio]);
 
   const playAudio = async (song) => {
     try {
@@ -140,16 +136,7 @@ const SongsList: FC = () => {
               className="flex flex-row justify-between items-center"
             >
               <p className="text-lg">{song.fileName}</p>
-              {audioUrl && (
-                <WavesurferPlayer
-                  height={100}
-                  waveColor="violet"
-                  url={audioUrl}
-                  onReady={onReady}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                />
-              )}
+              {audioUrl && <AudioVisualizer url={audioUrl} />}
               <div className="cursor-pointer" onClick={() => playAudio(song)}>
                 <AiOutlineSound />
               </div>

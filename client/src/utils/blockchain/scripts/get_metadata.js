@@ -52,10 +52,12 @@ async function getContractData(contractAddress) {
 
   const data = await contract.get();
 
+  console.log({ userId: data[0], createdAt: data[1] });
+
   return { userId: data[0], createdAt: data[1] };
 }
 
-// // TODO REMOVE
-// getContractData('0x4AA53095a8c2D15e90516639fa62f96AAA1fA3Bf').catch(
-//   console.error
-// );
+// TODO REMOVE
+getContractData('0x02a6647357527b982C9234DcC7ceca9aB1F735fD').catch(
+  console.error
+);
