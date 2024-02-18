@@ -66,8 +66,8 @@ export default function Home() {
               'ML-powered analysis.',
               1500,
             ]}
-            speed={99}
-            deletionSpeed={99}
+            speed={60}
+            deletionSpeed={60}
             repeat={Infinity}
           />
 
