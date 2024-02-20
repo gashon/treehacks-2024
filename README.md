@@ -1,5 +1,5 @@
 # Sonoverse
-Automating copyright detection for small artists 
+Protecting small artists' work through a decentralized on-chain ML-driven platform, integrating automatic DMCA claims.
 
 ## TL; DR
 - Music piracy costs the U.S. economy [$12.5 billion annually](https://www.riaa.com/wp-content/uploads/2015/09/20120515_SoundRecordingPiracy.pdf).
