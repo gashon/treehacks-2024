@@ -1,35 +1,27 @@
-import React, { useEffect } from 'react';
-import Sketch from 'react-p5';
-import p5Types, { Color } from 'p5'; // Import this for typechecking and intellisense
+import React, { useEffect } from "react";
+import Sketch from "react-p5";
+import p5Types, { Color } from "p5"; // Import this for typechecking and intellisense
 
 interface ComponentProps {}
 
-interface Particle {
-  vel: p5Types.Vector;
-  pos: p5Types.Vector;
-  life: number;
-  flip: number;
-  color1: Color;
-  color2: Color;
-  move: (iterations: number) => void;
-  checkEdge: () => void;
-  respawn: () => void;
-  respawnTop: () => void;
-  display: (r: number) => void;
-}
+type Particle = {
+  x: number;
+  y: number;
+  clr: p5Types.Color;
+};
 
 const Perlin: React.FC<ComponentProps> = (props: ComponentProps) => {
   useEffect(() => {
     // Cleanup function to remove the canvas
     return function cleanup() {
-      let canvas = document.querySelector('canvas');
+      let canvas = document.querySelector("canvas");
       if (canvas) {
         canvas.remove();
       }
     };
   }, []);
 
-  let particles = [];
+  let particles: Particle[] = [];
 
   // Setup function
   const setup = (p5: p5Types, canvasParentRef: Element) => {
@@ -65,12 +57,8 @@ const Perlin: React.FC<ComponentProps> = (props: ComponentProps) => {
     }
   };
 
-  return (
-    <Sketch
-      setup={setup}
-      draw={draw}
-    />
-  );
+  //@ts-ignore
+  return <Sketch setup={setup} draw={draw} />;
 };
 
 export default Perlin;
