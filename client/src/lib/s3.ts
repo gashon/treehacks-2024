@@ -38,7 +38,6 @@ export const getPresignedUrl = async (
     command = new GetObjectCommand({
       Bucket: process.env.S3_BUCKET_NAME,
       Key: key,
-      ContentType: fileType,
     });
 
   // @FIX TS ERROR

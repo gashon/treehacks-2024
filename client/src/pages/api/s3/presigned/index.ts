@@ -24,6 +24,7 @@ export default async function handler(
     return;
   }
 
+  // @ts-ignore
   const { file_name, file_type, readonly } = req.query as S3PresignedGetRequest;
 
   const { url, key } = await getPresignedUrl(file_type, {

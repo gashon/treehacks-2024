@@ -57,9 +57,11 @@ export type GetPresignedUrlResponse = Response<{
   key: string;
 }>;
 
-export type PutChainResponse = Response<{
-  song: Song;
-}>;
+export type PutChainResponse =
+  | Response<{
+      song: Song;
+    }>
+  | { message: string };
 
 export type SongsGetResponse = Response<{
   songs: Pick<

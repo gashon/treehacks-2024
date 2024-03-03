@@ -10,6 +10,4 @@ aws.config.update({
 
 export const SES = new aws.SES({ region: "us-west-1" });
 export const senderEmail = "gashon@ghussein.org";
-export const s3Client = new S3({
-  signatureVersion: "v4",
-});
+export const s3Client = new S3({});

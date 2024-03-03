@@ -1,5 +1,12 @@
 import dynamic from "next/dynamic";
-import { useCallback, useState, useRef, FC, useEffect } from "react";
+import {
+  useCallback,
+  useState,
+  useRef,
+  FC,
+  useEffect,
+  PropsWithChildren,
+} from "react";
 import { useDropzone } from "react-dropzone";
 import { AiOutlineSound } from "react-icons/ai";
 import { Toaster, toast } from "sonner";
@@ -14,7 +21,6 @@ import {
   getPresignedUrl,
   useGetSongs,
   uploadToChain,
-  submitDMCAClaim,
   mintNewNFT,
 } from "@/features/song";
 
@@ -22,7 +28,12 @@ const PerlinSketchNoSSR = dynamic(() => import("@/components/perlin"), {
   ssr: false,
 });
 
-const Modal = ({ isOpen, onClose, children }) => {
+const Modal: FC<
+  PropsWithChildren<{
+    isOpen: boolean;
+    onClose: () => void;
+  }>
+> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return (
@@ -133,6 +144,7 @@ const Dropzone: FC = () => {
 
   const onDrop = useCallback(
     // TODO add notifications/loading indicator
+    // @ts-ignore
     async (acceptedFiles) => {
       setIsUploading({ open: true });
 
@@ -156,6 +168,7 @@ const Dropzone: FC = () => {
             s3Key: presignedResponse.key,
           });
 
+          // @ts-ignore
           if (!res.message)
             queryClient.invalidateQueries({ queryKey: ["songs"] });
 
@@ -165,6 +178,7 @@ const Dropzone: FC = () => {
 
           queryClient.invalidateQueries({ queryKey: ["songs"] });
 
+          //@ts-ignore
           setIsUploading({ open: false, error: res?.message ?? undefined });
         }
       });
@@ -205,21 +219,6 @@ const Dropzone: FC = () => {
   );
 };
 
-const AudioVisualizer: FC<{ url: string }> = ({ url }) => {
-  const wavesurferRef = useRef(null);
-  useEffect(() => {
-    if (wavesurferRef.current) {
-      wavesurferRef.current.load(url);
-    }
-  }, [url]);
-  return (
-    <WaveSurfer
-      url={url}
-      options={{ waveColor: "violet", progressColor: "purple" }}
-    />
-  );
-};
-
 const CopyrightLink: FC<{ rank: number; url: string }> = ({ rank, url }) => {
   return (
     <div className="flex gap-4 items-center justify-between w-full">
@@ -240,9 +239,6 @@ const CopyrightLink: FC<{ rank: number; url: string }> = ({ rank, url }) => {
 
 const SongsList: FC = () => {
   const { data, isLoading } = useGetSongs();
-  const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined);
-  const [audio, setAudio] = useState<Audio | undefined>(undefined);
-  const visualizerRef = useRef<HTMLCanvasElement>(null);
   const { data: strikes } = useGetStrikes();
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
@@ -253,24 +249,16 @@ const SongsList: FC = () => {
   if (isLoading) return <p>Loading</p>;
   if (!data?.data?.songs) return <p>No songs</p>;
 
-  // useEffect(() => isOpen{
-  //   // stop playing
-  //   if (audio) {
-  //     audio.play();
-  //   }
-  // }, [audio]);
-
+  //@ts-ignore
   const playAudio = async (song) => {
     try {
       const url = new URL(
         `https://treehacks-2024.s3.us-west-1.amazonaws.com/${song.s3Key}`,
       );
-      setAudioUrl(url);
 
+      //@ts-ignore
       const audio = new Audio(url);
       audio.play();
-
-      setAudio(audio);
     } catch (error) {
       console.error("Error playing the song", error);
     }
@@ -320,6 +308,7 @@ const SongsList: FC = () => {
                   <p className="text-lg">{song.fileName}</p>
                 )}
                 <p className="opacity-50">
+                  {/* ts-ignore */}
                   {new Date(song.createdAt).toISOString()}
                 </p>
               </div>
