@@ -17,6 +17,9 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^5.20.5
     version: 5.20.5(react@18.2.0)
+  '@types/p5':
+    specifier: ^1.7.6
+    version: 1.7.6
   aws-sdk:
     specifier: ^2.1560.0
     version: 2.1560.0
@@ -2575,6 +2578,10 @@ packages:
 
   /@types/p5@1.7.0:
     resolution: {integrity: sha512-6AnjmW98/edgXB+pYDBx7t6QbCogIG6NUzey93JpGTZA4096C+KjSN8y0sj43QRd9XtblrAhoRXHj1pFZ2vsCg==}
+    dev: false
+
+  /@types/p5@1.7.6:
+    resolution: {integrity: sha512-6pLTOo0V3N5jZb5nTwjiv3lPHLK3Z/TjbhQUj8CTWXocUk1Z/f6OHTp3Pcwi1BhWnf5gqKUcyEb1gP0KIJuQgw==}
     dev: false
 
   /@types/pbkdf2@3.1.2:
